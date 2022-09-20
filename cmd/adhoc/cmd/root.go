@@ -11,4 +11,5 @@ func Execute() error {
 }
 
 func init() {
+	root.PersistentFlags().BoolP("debug", "d", false, "Turn on debug mode")
 }
