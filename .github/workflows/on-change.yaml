@@ -27,3 +27,8 @@ jobs:
         run: go build -o .go/builds/server cmd/server/main.go
       - name: "Run tests - All"
         run: go test ./...
+      - name: "Publish artifacts - Binaries"
+        uses: actions/upload-artifact@v3
+        with:
+          name: "Binaries"
+          path: .go/builds
