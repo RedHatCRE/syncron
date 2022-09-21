@@ -5,6 +5,12 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+// Configure sets up Logrus so that it behaves as the user describes
+// on the CLI.
+//
+// At this moment, Configure supports the following flags from the CLI:
+//   - '-d'
+//   - '--debug'
 func Configure(in cli.Input) error {
 	steps := []func() error{
 		// Set log level
