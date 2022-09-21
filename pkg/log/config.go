@@ -12,7 +12,8 @@ import (
 //   - '-d'
 //   - '--debug'
 func Configure(in cli.Input) error {
-	steps := []func() error{
+	// Define all actions needed to get Logrus ready to go
+	setup := []func() error{
 		// Set log level
 		func() error {
 			debug, err := in.Cmd.Flags().GetBool(cli.DEBUG_F)
@@ -31,7 +32,7 @@ func Configure(in cli.Input) error {
 		},
 	}
 
-	for _, step := range steps {
+	for _, step := range setup {
 		err := step()
 
 		if err != nil {
