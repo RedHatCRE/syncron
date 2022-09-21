@@ -1,6 +1,10 @@
 package cmd
 
-import "github.com/spf13/cobra"
+import (
+	log "github.com/sirupsen/logrus"
+
+	"github.com/spf13/cobra"
+)
 
 var download = &cobra.Command{
 	Use:       "download",
@@ -18,5 +22,9 @@ func init() {
 }
 
 func onRun(cmd *cobra.Command, args []string) error {
+	log.Info("This is an info message.")
+	log.Debug("This is a debug message.")
+	log.Trace("This is a trace message, doubt they will happen much.")
+
 	return nil
 }
