@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"github.com/rhcre/syncron/pkg/cli"
-	"github.com/rhcre/syncron/pkg/logrus"
+	"github.com/rhcre/syncron/pkg/log"
 	"github.com/spf13/cobra"
 )
 
@@ -16,14 +16,19 @@ func Execute() error {
 }
 
 func init() {
-	root.PersistentFlags().BoolP("debug", "d", false, "Turn on debug mode")
+	root.PersistentFlags().BoolP(
+		cli.DEBUG_F,
+		cli.DEBUG_P,
+		false,
+		"Turn on debug mode",
+	)
 }
 
 func onPersistentPreRun(cmd *cobra.Command, args []string) error {
 	steps := []func() error{
 		// Set up logging
 		func() error {
-			return logrus.Configure(
+			return log.Configure(
 				cli.Input{
 					Cmd:  cmd,
 					Args: args,

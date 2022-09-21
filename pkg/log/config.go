@@ -1,15 +1,15 @@
-package logrus
+package log
 
 import (
 	"github.com/rhcre/syncron/pkg/cli"
 	"github.com/sirupsen/logrus"
 )
 
-func Configure(cli cli.Input) error {
+func Configure(in cli.Input) error {
 	steps := []func() error{
 		// Set log level
 		func() error {
-			debug, err := cli.Cmd.Flags().GetBool("debug")
+			debug, err := in.Cmd.Flags().GetBool(cli.DEBUG_F)
 
 			if err != nil {
 				return err
