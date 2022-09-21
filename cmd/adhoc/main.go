@@ -1,9 +1,8 @@
 package main
 
 import (
-	"log"
-
-	"github.com/rhcre/syncron/cmd/adhoc/cmd"
+	cmd "github.com/rhcre/syncron/cmd/adhoc/cmd"
+	log "github.com/sirupsen/logrus"
 )
 
 func main() {
