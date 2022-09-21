@@ -25,7 +25,8 @@ func init() {
 }
 
 func onPersistentPreRun(cmd *cobra.Command, args []string) error {
-	steps := []func() error{
+	// Define actions taken to get Syncron ready before commands are executed
+	setup := []func() error{
 		// Set up logging
 		func() error {
 			return log.Configure(
@@ -37,7 +38,7 @@ func onPersistentPreRun(cmd *cobra.Command, args []string) error {
 		},
 	}
 
-	for _, step := range steps {
+	for _, step := range setup {
 		err := step()
 
 		if err != nil {
