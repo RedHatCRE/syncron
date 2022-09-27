@@ -25,7 +25,7 @@ type CobraParser struct {
 }
 
 // NewParserForCobra returns a new cli.CobraParser that will get to work with
-// the Cobra structures given to this.
+// the Cobra structures given to it.
 func NewParserForCobra(cmd *cobra.Command, args []string) *CobraParser {
 	result := new(CobraParser)
 
