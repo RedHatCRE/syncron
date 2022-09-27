@@ -26,9 +26,11 @@ func Configure(parser cli.CLIParser) error {
 		},
 	}
 
+	// Run all steps defined above
 	for _, step := range setup {
 		err := step()
 
+		// Halt if the setup failed
 		if err != nil {
 			return err
 		}
