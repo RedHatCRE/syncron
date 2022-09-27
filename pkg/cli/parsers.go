@@ -38,12 +38,12 @@ func NewParserForCobra(cmd *cobra.Command, args []string) *CobraParser {
 // GetDebug implements cli.CLIParser.GetDebug by extracting the value of the
 // 'debug' flag from Cobra's input data.
 func (parser *CobraParser) GetDebug() bool {
-	val, err := parser.cmd.Flags().GetBool(DEBUG_F)
+	val, err := parser.cmd.Flags().GetBool(Debug)
 
 	if err != nil {
 		logrus.Errorf(
 			"Unable to read value for argument: '%s'. Reason: '%s'.",
-			DEBUG_F, err,
+			Debug, err,
 		)
 
 		logrus.Warn(
