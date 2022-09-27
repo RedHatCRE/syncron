@@ -29,12 +29,9 @@ func onPersistentPreRun(cmd *cobra.Command, args []string) error {
 	setup := []func() error{
 		// Set up logging
 		func() error {
-			return log.Configure(
-				cli.Input{
-					Cmd:  cmd,
-					Args: args,
-				},
-			)
+			parser := cli.NewParserForCobra(cmd, args)
+
+			return log.Configure(parser)
 		},
 	}
 
