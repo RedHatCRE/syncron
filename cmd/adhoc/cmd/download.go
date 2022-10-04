@@ -9,25 +9,25 @@ import (
 var download = &cobra.Command{
 	Use:       "download",
 	Args:      cobra.MatchAll(cobra.ExactArgs(1), cobra.OnlyValidArgs),
-	ValidArgs: []string{cli.INSIGHTS_A, cli.SOSREPORTS_A, cli.ALL_A},
+	ValidArgs: []string{cli.Insights, cli.SOSReports, cli.All},
 	RunE:      onRun,
 }
 
 func init() {
 	download.Flags().Int(
-		cli.DAYS_F,
+		cli.Days,
 		3,
 		"Download data from the last X days",
 	)
 
 	download.Flags().Int(
-		cli.MONTHS_F,
+		cli.Months,
 		0,
 		"Download data from the last X months",
 	)
 
 	download.Flags().Int(
-		cli.YEARS_F,
+		cli.Years,
 		0,
 		"Download data from the last X years",
 	)

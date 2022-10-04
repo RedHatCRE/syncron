@@ -17,8 +17,8 @@ func Execute() error {
 
 func init() {
 	root.PersistentFlags().BoolP(
-		cli.DEBUG_F,
-		cli.DEBUG_P,
+		cli.Debug,
+		cli.D,
 		false,
 		"Turn on debug mode",
 	)
@@ -29,12 +29,9 @@ func onPersistentPreRun(cmd *cobra.Command, args []string) error {
 	setup := []func() error{
 		// Set up logging
 		func() error {
-			return log.Configure(
-				cli.Input{
-					Cmd:  cmd,
-					Args: args,
-				},
-			)
+			parser := cli.NewParserForCobra(cmd, args)
+
+			return log.Configure(parser)
 		},
 	}
 
