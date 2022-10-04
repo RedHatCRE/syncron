@@ -16,3 +16,7 @@
 
 # IDEs
 .vscode/
+
+# Prevent configuration file from being uploaded
+*.yaml
+
