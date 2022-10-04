@@ -1,0 +1,40 @@
+@startuml sources
+' Diagram that describes the relationship between classes that take care of
+' accessing and downloading all desired files from the data sources.
+hide empty fields
+hide empty methods
+
+interface Downloader {
+    + Download(): error
+}
+
+class Insights
+class SOSReports
+class ComposedDownloader
+
+class DownloaderFactory {
+    + FromSource(source: Source): ComposedDownloader
+}
+
+class Orchestrator {
+    + Run(...): error
+}
+
+enum Source {
+    Insights
+    SOSReports
+    All
+}
+
+Downloader <|.. Insights
+Downloader <|.. SOSReports
+Downloader <|.. ComposedDownloader
+
+Downloader "0..*" o.up. ComposedDownloader
+
+DownloaderFactory --> ComposedDownloader
+DownloaderFactory::FromSource .right.> Source
+
+Orchestrator ..> DownloaderFactory
+
+@enduml
