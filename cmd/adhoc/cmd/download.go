@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"github.com/redhatcre/syncron/pkg/cli"
-	"github.com/rhcre/syncron/pkg/cli"
 	"github.com/spf13/cobra"
 )
 
