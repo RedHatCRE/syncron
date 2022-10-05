@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"github.com/redhatcre/syncron/pkg/cli"
-	"github.com/sirupsen/logrus"
+	"github.com/rhcre/syncron/pkg/cli"
 	"github.com/spf13/cobra"
 )
 
@@ -36,9 +36,6 @@ func init() {
 }
 
 func onRun(cmd *cobra.Command, args []string) error {
-	logrus.Info("This is an info message.")
-	logrus.Debug("This is a debug message.")
-	logrus.Trace("This is a trace message, doubt they will happen much.")
 
 	return nil
 }

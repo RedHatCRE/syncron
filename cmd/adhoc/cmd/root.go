@@ -3,7 +3,9 @@ package cmd
 import (
 	"github.com/redhatcre/syncron/pkg/cli"
 	"github.com/redhatcre/syncron/pkg/log"
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 var root = &cobra.Command{
@@ -30,11 +32,25 @@ func onPersistentPreRun(cmd *cobra.Command, args []string) error {
 		// Set up logging
 		func() error {
 			parser := cli.NewParserForCobra(cmd, args)
-
 			return log.Configure(parser)
 		},
+		func() error {
+			// Setting up file formatting
+			viper.SetConfigFile("syncron.yaml")
+			viper.SetConfigType("yaml")
+			viper.AddConfigPath(".")
+			// Reading from file
+			err := viper.ReadInConfig()
+			if err != nil {
+				return err
+			} else {
+				logrus.Info("Your configuration file was read succesfully!")
+				bucket_name := viper.Get("buckets.sosreports")
+				logrus.Info("Reading from bucket: ", bucket_name)
+			}
+			return nil
+		},
 	}
-
 	for _, step := range setup {
 		err := step()
 
@@ -42,6 +58,5 @@ func onPersistentPreRun(cmd *cobra.Command, args []string) error {
 			return err
 		}
 	}
-
 	return nil
 }
