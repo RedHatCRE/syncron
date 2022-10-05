@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/rhcre/syncron/cmd/adhoc/cmd"
+	"github.com/redhatcre/syncron/cmd/adhoc/cmd"
 	"github.com/sirupsen/logrus"
 )
 

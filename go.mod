@@ -1,4 +1,4 @@
-module github.com/rhcre/syncron
+module github.com/redhatcre/syncron
 
 go 1.18
 
