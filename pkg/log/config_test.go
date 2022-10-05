@@ -3,8 +3,8 @@ package log_test
 import (
 	"testing"
 
-	"github.com/rhcre/syncron/pkg/log"
-	"github.com/rhcre/syncron/test/mocks"
+	"github.com/redhatcre/syncron/pkg/log"
+	"github.com/redhatcre/syncron/test/mocks"
 	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
