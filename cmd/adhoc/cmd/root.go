@@ -49,7 +49,7 @@ func onPersistentPreRun(cmd *cobra.Command, args []string) error {
 				bucket_name := viper.Get("buckets.sosreports")
 				logrus.Info("Reading from bucket: ", bucket_name)
 			}
-			return err
+			return nil
 		},
 	}
 	for _, step := range setup {
