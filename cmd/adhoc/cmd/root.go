@@ -1,8 +1,8 @@
 package cmd
 
 import (
-	"github.com/rhcre/syncron/pkg/cli"
-	"github.com/rhcre/syncron/pkg/log"
+	"github.com/redhatcre/syncron/pkg/cli"
+	"github.com/redhatcre/syncron/pkg/log"
 	"github.com/spf13/cobra"
 )
 

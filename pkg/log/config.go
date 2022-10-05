@@ -1,7 +1,7 @@
 package log
 
 import (
-	"github.com/rhcre/syncron/pkg/cli"
+	"github.com/redhatcre/syncron/pkg/cli"
 	"github.com/sirupsen/logrus"
 )
 
