@@ -65,7 +65,8 @@ func onPersistentPreRun(cmd *cobra.Command, args []string) error {
 			},
 			)
 			if err != nil {
-				fmt.Println("Error setting up AWS...", "Check config params", err)
+				fmt.Println("Error setting up AWS...", "Check config params")
+				return err
 			} else {
 				logrus.Info("AWS setup succesful!")
 			}
@@ -73,7 +74,8 @@ func onPersistentPreRun(cmd *cobra.Command, args []string) error {
 			svc := s3.New(sess)
 			resp, err := svc.ListObjectsV2(&s3.ListObjectsV2Input{Bucket: aws.String(viper.GetString("bucket"))})
 			if err != nil {
-				fmt.Println("Unable to list items in bucket", err, resp)
+				fmt.Println("Unable to list items in bucket", resp)
+				return err
 			} else {
 				logrus.Info("Success getting into the bucket!")
 			}
