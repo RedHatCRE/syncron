@@ -35,6 +35,5 @@ func init() {
 }
 
 func onRun(cmd *cobra.Command, args []string) error {
-
 	return nil
 }
