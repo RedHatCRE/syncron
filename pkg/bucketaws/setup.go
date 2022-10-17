@@ -22,6 +22,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
+	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 )
@@ -63,7 +64,19 @@ func SetupSession() *session.Session {
 func AccessBucket(sess *session.Session) error {
 	logrus.Info("Accessing bucket...")
 	svc := s3.New(sess)
-	resp, err := svc.ListObjectsV2(&s3.ListObjectsV2Input{Bucket: aws.String(viper.GetString("bucket"))})
+	resp, err := svc.ListObjectsV2(&s3.ListObjectsV2Input{
+		Bucket: aws.String(viper.GetString("bucket")),
+		Prefix: aws.String("attachment_data/sosreport/sos_extraction_rules.sos.sos_run_info/created_year=2022/created_month=10/created_day=5/"),
+	})
+	for _, item := range resp.Contents {
+		DownloadFromBucket(item.Key)
+		fmt.Println(*item.Key, item.LastModified)
+		//	fmt.Println("Size:         ", *item.Size)
+		//	fmt.Println("Storage class:", *item.StorageClass)
+		//	fmt.Println("")
+	}
+	fmt.Printf("Number of items: %d\n", len(resp.Contents))
+
 	if err != nil {
 		fmt.Println("Unable to list items in bucket", resp)
 		return err
@@ -73,9 +86,34 @@ func AccessBucket(sess *session.Session) error {
 	return nil
 }
 
-func DownloadFromBucket() error {
+func DownloadFromBucket(key *string) error {
 
-	// Future PR implementation
+	sess := SetupSession()
+
+	dwn := s3manager.NewDownloader(sess)
+	filePath := strings.Split(*key, "/")
+	os.MkdirAll("/tmp/syncron/" + *key, 0700)
+	fooFile, err := os.Create("/tmp/" + filePath[len(filePath)-1])
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		logrus.Info("File opened correctly")
+	}
+	objects := []s3manager.BatchDownloadObject{
+		{
+			Object: &s3.GetObjectInput{
+				Bucket: aws.String("DH-STAGE-INSIGHTS"),
+				Key:    aws.String(*key),
+			},
+			Writer: fooFile,
+		},
+	}
+
+	iter := &s3manager.DownloadObjectsIterator{Objects: objects}
+
+	if err := dwn.DownloadWithIterator(aws.BackgroundContext(), iter); err != nil {
+		fmt.Println("nooooo", err)
+	}
 
 	return nil
 }
