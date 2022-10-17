@@ -16,7 +16,6 @@
 package cmd
 
 import (
-	s3setup "github.com/redhatcre/syncron/pkg/bucketaws"
 	"github.com/redhatcre/syncron/pkg/cli"
 	"github.com/redhatcre/syncron/pkg/log"
 	"github.com/spf13/cobra"
@@ -47,15 +46,6 @@ func onPersistentPreRun(cmd *cobra.Command, args []string) error {
 		func() error {
 			parser := cli.NewParserForCobra(cmd, args)
 			return log.Configure(parser)
-		},
-		func() error {
-			// Reading configuration file
-			s3setup.ConfigRead()
-			// Creating AWS session
-			sess := s3setup.SetupSession()
-			// Accessing bucket
-			err := s3setup.AccessBucket(sess)
-			return err
 		},
 	}
 	for _, step := range setup {

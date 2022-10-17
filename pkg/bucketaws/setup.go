@@ -17,6 +17,7 @@ package s3setup
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
@@ -51,7 +52,8 @@ func SetupSession() *session.Session {
 	},
 	)
 	if err != nil {
-		fmt.Println("There was an error setting up your aws session", err)
+		fmt.Println("There was an error setting up your aws session")
+		os.Exit(1)
 	} else {
 		logrus.Info("Your AWS session was set up correctly")
 	}

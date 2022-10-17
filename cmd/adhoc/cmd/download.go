@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	s3setup "github.com/redhatcre/syncron/pkg/bucketaws"
 	"github.com/redhatcre/syncron/pkg/cli"
 	"github.com/spf13/cobra"
 )
@@ -35,5 +36,11 @@ func init() {
 }
 
 func onRun(cmd *cobra.Command, args []string) error {
+	// Reading configuration file
+	s3setup.ConfigRead()
+	// Creating AWS session
+	sess := s3setup.SetupSession()
+	// Accessing bucket
+	s3setup.AccessBucket(sess)
 	return nil
 }
