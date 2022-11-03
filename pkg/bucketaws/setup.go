@@ -71,22 +71,6 @@ func ConfigRead() error {
 	}
 	logrus.Info("Your configuration file was read succesfully")
 	logrus.Info("Reading from bucket: ", viper.Get("bucket"))
-=======
-func ConfigRead() error {
-	// Setting up file formatting
-	// Pulling from Viper
-	viper.SetConfigFile("config/syncron.yaml")
-	viper.SetConfigType("yaml")
-	viper.AddConfigPath(".")
-	// Reading from file
-	err := viper.ReadInConfig()
-	if err != nil {
-		return err
-	} else {
-		logrus.Info("Your configuration file was read succesfully")
-		logrus.Info("Reading from bucket: ", viper.Get("bucket"))
-	}
-}
 
 func SetupSession() *session.Session {
 
