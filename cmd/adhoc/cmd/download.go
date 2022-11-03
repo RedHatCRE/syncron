@@ -54,7 +54,6 @@ func init() {
 }
 
 func onRun(cmd *cobra.Command, args []string) error {
-
 	Month, _ := cmd.Flags().GetInt(cli.Months)
 	Year, _ := cmd.Flags().GetInt(cli.Years)
 	cliDay, err := cmd.Flags().GetInt(cli.Days)
@@ -66,6 +65,7 @@ func onRun(cmd *cobra.Command, args []string) error {
 	}
 
 	fromDate := time.Now().AddDate(-Year, -Month, -cliDay)
+
 	// Reading configuration file
 	s3setup.ConfigRead()
 	// Creating AWS session

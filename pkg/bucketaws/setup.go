@@ -23,6 +23,7 @@ import (
 
 	files "github.com/redhatcre/syncron/utils"
 
+
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
@@ -70,7 +71,21 @@ func ConfigRead() error {
 	}
 	logrus.Info("Your configuration file was read succesfully")
 	logrus.Info("Reading from bucket: ", viper.Get("bucket"))
-	return nil
+=======
+func ConfigRead() error {
+	// Setting up file formatting
+	// Pulling from Viper
+	viper.SetConfigFile("config/syncron.yaml")
+	viper.SetConfigType("yaml")
+	viper.AddConfigPath(".")
+	// Reading from file
+	err := viper.ReadInConfig()
+	if err != nil {
+		return err
+	} else {
+		logrus.Info("Your configuration file was read succesfully")
+		logrus.Info("Reading from bucket: ", viper.Get("bucket"))
+	}
 }
 
 func SetupSession() *session.Session {
