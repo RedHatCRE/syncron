@@ -71,6 +71,7 @@ func ConfigRead() error {
 	}
 	logrus.Info("Your configuration file was read succesfully")
 	logrus.Info("Reading from bucket: ", viper.Get("bucket"))
+	return nil
 }
 
 func SetupSession() *session.Session {
