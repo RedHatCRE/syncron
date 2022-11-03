@@ -24,10 +24,9 @@ import (
 	"github.com/spf13/viper"
 )
 
+// This function takes a key from s3 and prepares the system for
+// download by recursively creating the path needed.
 func FilePathSetup(key *string, dwn *s3manager.Downloader) (*os.File, string) {
-
-	// This function takes a key from s3 and prepares the system for
-	// download by recursively creating the path needed.
 
 	download_dir := viper.GetString("download_dir")
 	os.MkdirAll(download_dir+filepath.Dir(*key), 0700)
@@ -39,10 +38,10 @@ func FilePathSetup(key *string, dwn *s3manager.Downloader) (*os.File, string) {
 	return fooFile, fileName
 }
 
+// This function appends the prefix to components
+// Make sure prefix variable is initiated  properly in config file
 func AppendPrefix(bPrefix string) string {
 
-	// This function appends the prefix to components
-	// Make sure prefix variable is initiated  properly in config file
 	prefix := viper.GetString("prefix")
 	fullPrefix := fmt.Sprint(prefix + bPrefix)
 	return fullPrefix

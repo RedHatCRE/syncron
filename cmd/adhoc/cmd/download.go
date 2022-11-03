@@ -56,15 +56,14 @@ func init() {
 func onRun(cmd *cobra.Command, args []string) error {
 	Month, _ := cmd.Flags().GetInt(cli.Months)
 	Year, _ := cmd.Flags().GetInt(cli.Years)
-	cliDay, err := cmd.Flags().GetInt(cli.Days)
+	Day, err := cmd.Flags().GetInt(cli.Days)
 
-	if cliDay < 2 {
-		logrus.Error("No data available.")
-		logrus.Error("Try 3 days or greater.")
+	if Day < 2 {
+		logrus.Error("No data available. Try again with 3 or more days.")
 		return err
 	}
 
-	fromDate := time.Now().AddDate(-Year, -Month, -cliDay)
+	fromDate := time.Now().AddDate(-Year, -Month, -Day)
 
 	// Reading configuration file
 	s3setup.ConfigRead()

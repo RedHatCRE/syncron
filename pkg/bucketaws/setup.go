@@ -17,12 +17,10 @@ package s3setup
 
 import (
 	"fmt"
-	"os"
 	"strings"
 	"time"
 
 	files "github.com/redhatcre/syncron/utils"
-
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
@@ -32,11 +30,9 @@ import (
 	"github.com/spf13/viper"
 )
 
+// Builds dates from given date to current date,
+// incrementing one day at a time.
 func ProcessDate(fromDate time.Time) []string {
-
-	// This function formats all dates from provided date
-	// until current date and returns a string formatted
-	// for s3 keys.
 
 	start := fromDate
 	end := time.Now()
@@ -52,11 +48,10 @@ func ProcessDate(fromDate time.Time) []string {
 	return dates
 }
 
-func ConfigRead() error {
-
-	// Setting up file formatting
-	// Using Viper
-	// Reading from file syncron.yaml
+// Setting up file formatting
+// Using Viper
+// Reading from file syncron.yaml
+func ConfigRead() {
 
 	viper.AddConfigPath("./config")
 	viper.SetConfigFile("syncron.yaml")
@@ -66,18 +61,15 @@ func ConfigRead() error {
 	// Reading from file
 	err := viper.ReadInConfig()
 	if err != nil {
-		logrus.Error(err)
-		logrus.Exit(1)
+		logrus.Fatal(err)
 	}
 	logrus.Info("Your configuration file was read succesfully")
 	logrus.Info("Reading from bucket: ", viper.Get("bucket"))
-	return nil
 }
 
+// Initialize a session with AWS SDK
+// It will read from the file located at ~/.aws/credentials and syncron/syncron.yaml
 func SetupSession() *session.Session {
-
-	// Initialize a session with AWS SDK
-	// It will read from the file located at ~/.aws/credentials and syncron/syncron.yaml
 
 	sess, err := session.NewSession(&aws.Config{
 		Region:   aws.String(viper.GetString("s3.region")),
@@ -85,16 +77,14 @@ func SetupSession() *session.Session {
 	},
 	)
 	if err != nil {
-		fmt.Println("There was an error setting up your aws session", err)
-		os.Exit(1)
+		logrus.Fatal("There was an error setting up your aws session", err)
 	}
 	logrus.Info("Your AWS session was set up correctly")
 	return sess
 }
 
+// This function initiates the service for downloading files in s3
 func AccessBucket(sess *session.Session) (*s3.S3, *s3manager.Downloader) {
-
-	// This function initiates the service for downloading files in s3
 
 	logrus.Info("Accessing bucket...")
 	svc := s3.New(sess)
@@ -103,10 +93,9 @@ func AccessBucket(sess *session.Session) (*s3.S3, *s3manager.Downloader) {
 	return svc, dwn
 }
 
+// This function takes care of listing the keys in the bucket, filtering
+// through those that are needed.
 func DownloadFromBucket(svc *s3.S3, dwn *s3manager.Downloader, dates []string, bprefix string) error {
-
-	// This function takes care of listing the keys in the bucket, filtering
-	// through those that are needed.
 
 	var continuationToken *string
 
@@ -117,9 +106,7 @@ func DownloadFromBucket(svc *s3.S3, dwn *s3manager.Downloader, dates []string, b
 			ContinuationToken: continuationToken,
 		})
 		if err != nil {
-			logrus.Error("There was an error listing the objects in bucket.")
-			logrus.Error(err)
-			os.Exit(1)
+			logrus.Fatal("There was an error listing the objects in bucket.", err)
 		}
 		for _, item := range resp.Contents {
 			for _, x := range dates {
