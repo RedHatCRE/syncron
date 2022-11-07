@@ -1,4 +1,4 @@
-<div style="text-align: center;">
+<div align="center">
   <img alt="cgapp logo" src="https://seeklogo.com/images/G/go-logo-046185B647-seeklogo.com.png" width="100px"/>
 
 # Syncron
@@ -7,6 +7,7 @@ Easily fetch files from **S3 buckets** with a cli based application written in G
 
 [![GoProject](https://img.shields.io/badge/Go-1.18+-00ADD8?style=for-the-badge&logo=go)](https://github.com/RedHatCRE/syncron) [![GoReport](https://img.shields.io/badge/Go_report-A+-success?style=for-the-badge&logo=none)](https://goreportcard.com/badge/github.com/redhatcre/syncron) ![License](https://img.shields.io/badge/license-apache_2.0-red?style=for-the-badge&logo=none)
 </div>
+
 ## ⚡️ Quick start
 
 [Download](https://golang.org/dl/) and install **Go**. 
@@ -18,8 +19,6 @@ Run:
 ```bash
 go run cmd/adhoc/main.go
 ```
-
-
 
 ## 📖 Setup
 
