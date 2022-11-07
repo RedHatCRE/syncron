@@ -133,3 +133,13 @@ func DownloadFromBucket(svc *s3.S3, dwn *s3manager.Downloader, dates []string, b
 	}
 	return nil
 }
+
+// Check AWS credentials are correct
+func Credcheck(sess *session.Session) {
+	_, err := sess.Config.Credentials.Get()
+	if err != nil {
+		logrus.Fatal(
+			"Error reading credentials file. Check README for help.\n")
+	}
+	logrus.Info("Credentials file read succesfully")
+}

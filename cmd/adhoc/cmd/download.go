@@ -69,6 +69,8 @@ func onRun(cmd *cobra.Command, args []string) error {
 	s3setup.ConfigRead()
 	// Creating AWS session
 	sess := s3setup.SetupSession()
+	//Checking credentials
+	s3setup.Credcheck(sess)
 	// Processing dates to download
 	dates := s3setup.ProcessDate(fromDate)
 	// Accessing bucket
