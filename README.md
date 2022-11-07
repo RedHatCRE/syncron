@@ -1,12 +1,12 @@
-<h1 align="center">
-  <img alt="cgapp logo" src="https://seeklogo.com/images/G/go-logo-046185B647-seeklogo.com.png" width="100px"/><br/>
-  Syncron
-</h1>
-<p align="center">Easily fetch files from  <b>S3 buckets</b> with a cli based application written in Golang.</p>
+<div style="text-align: center;">
+  <img alt="cgapp logo" src="https://seeklogo.com/images/G/go-logo-046185B647-seeklogo.com.png" width="100px"/>
 
-<p align="center"><a href="https://pkg.go.dev/github.com/create-go-app/cli/v3?tab=doc" 
-target="_blank"><img src="https://img.shields.io/badge/Go-1.18+-00ADD8?style=for-the-badge&logo=go" alt="go version" /></a>&nbsp;<a href="https://gocover.io/github.com/create-go-app/cli/pkg/cgapp" target="_blank"><a href="https://goreportcard.com/badge/github.com/redhatcre/syncron" target="_blank"><img src="https://img.shields.io/badge/Go_report-A+-success?style=for-the-badge&logo=none" alt="go report" /></a>&nbsp;<img src="https://img.shields.io/badge/license-apache_2.0-red?style=for-the-badge&logo=none" alt="license" /></p>
+# Syncron
 
+Easily fetch files from **S3 buckets** with a cli based application written in Golang.
+
+[![GoProject](https://img.shields.io/badge/Go-1.18+-00ADD8?style=for-the-badge&logo=go)](https://github.com/RedHatCRE/syncron) [![GoReport](https://img.shields.io/badge/Go_report-A+-success?style=for-the-badge&logo=none)](https://goreportcard.com/badge/github.com/redhatcre/syncron) ![License](https://img.shields.io/badge/license-apache_2.0-red?style=for-the-badge&logo=none)
+</div>
 ## ⚡️ Quick start
 
 [Download](https://golang.org/dl/) and install **Go**. 
@@ -67,4 +67,4 @@ go run cmd/adhoc/main.go download [option] [--flag] [number]
 
 ## ⚠️ License
 
-`Syncron` is free and open-source software licensed under the [Apache 2.0 License](https://github.com/create-go-app/cli/blob/master/LICENSE). 
+`Syncron` is free and open-source software licensed under the [Apache 2.0 License](https://github.com/RedHatCRE/syncron/blob/main/LICENSE). 
