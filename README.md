@@ -42,6 +42,13 @@ To use Syncron, two important steps must be taken.
             ```
 - Proper credentials must be present on running machine at $HOME/.aws/credentials
 
+The credentials file has the following format:
+
+```
+[default]
+aws_access_key_id = "XXXXXXX"
+aws_secret_access_key = "XXXXXXX"
+```
 
 ## ⚙️ Commands & Options
 
