@@ -121,7 +121,7 @@ func DownloadFromBucket(svc *s3.S3, dwn *s3manager.Downloader, dates []string, b
 							Key:    aws.String(*item.Key),
 						})
 					duration := time.Since(start)
-					logrus.Info("Download took: ", duration.Round(10000000))
+					logrus.Info("Download took: ", duration.Truncate(time.Second / 2))
 					if err != nil {
 						fmt.Println("There was an error fetching key info.", err)
 						return err
