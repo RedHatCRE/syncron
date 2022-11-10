@@ -113,12 +113,15 @@ func DownloadFromBucket(svc *s3.S3, dwn *s3manager.Downloader, dates []string, b
 				if strings.Contains(*item.Key, x) {
 					fooFile, fileName := files.FilePathSetup(item.Key, dwn)
 					logrus.Info("Downloading ", fileName)
+					start := time.Now()
 					_, err := dwn.Download(
 						fooFile,
 						&s3.GetObjectInput{
 							Bucket: aws.String(viper.GetString("bucket")),
 							Key:    aws.String(*item.Key),
 						})
+					duration := time.Since(start)
+					logrus.Info("Download took: ", duration.Round(10000000))
 					if err != nil {
 						fmt.Println("There was an error fetching key info.", err)
 						return err
