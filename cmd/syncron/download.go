@@ -30,6 +30,7 @@ var download = &cobra.Command{
 	Args:      cobra.MatchAll(cobra.ExactArgs(1), cobra.OnlyValidArgs),
 	ValidArgs: []string{cli.Insights, cli.SOSReports, cli.All},
 	RunE:      onRun,
+	Short:     "Download files from bucket",
 }
 
 func init() {
@@ -62,7 +63,6 @@ func onRun(cmd *cobra.Command, args []string) error {
 		logrus.Error("No data available. Try again with 3 or more days.")
 		return err
 	}
-
 	fromDate := time.Now().AddDate(-Year, -Month, -Day)
 
 	// Reading configuration file

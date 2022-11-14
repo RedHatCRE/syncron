@@ -53,9 +53,10 @@ func ProcessDate(fromDate time.Time) []string {
 // Reading from file syncron.yaml
 func ConfigRead() {
 
-	viper.AddConfigPath("./config")
 	viper.SetConfigFile("syncron.yaml")
-	viper.SetConfigType("yaml")
+	//viper.SetConfigType("yaml")
+	viper.AddConfigPath("./config")
+	//viper.AddConfigPath(".")
 	viper.SetDefault("download_dir", "/tmp/syncron/")
 
 	// Reading from file
@@ -121,7 +122,7 @@ func DownloadFromBucket(svc *s3.S3, dwn *s3manager.Downloader, dates []string, b
 							Key:    aws.String(*item.Key),
 						})
 					duration := time.Since(start)
-					logrus.Info("Download took: ", duration.Truncate(time.Second / 2))
+					logrus.Info("Download took: ", duration.Truncate(time.Second/2))
 					if err != nil {
 						fmt.Println("There was an error fetching key info.", err)
 						return err
