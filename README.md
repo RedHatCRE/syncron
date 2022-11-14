@@ -8,17 +8,28 @@ Easily fetch files from **S3 buckets** with a cli based application written in G
 [![GoProject](https://img.shields.io/badge/Go-1.18+-00ADD8?style=for-the-badge&logo=go)](https://github.com/RedHatCRE/syncron) [![GoReport](https://img.shields.io/badge/Go_report-A+-success?style=for-the-badge&logo=none)](https://goreportcard.com/badge/github.com/redhatcre/syncron) ![License](https://img.shields.io/badge/license-apache_2.0-red?style=for-the-badge&logo=none)
 </div>
 
-## ⚡️ Quick start
+## 🔧 Installation
 
-[Download](https://golang.org/dl/) and install **Go**. 
 
-> 🔔 Please note: version 1.18 or higher required
+- [Download](https://golang.org/dl/) and install **Go**. 
+    > Follow the link for instructions
+    > 🔔 Please note: version 1.18 or higher required
+- Clone this repository.
+    
+    > `git clone git@github.com:RedHatCRE/syncron.git`
 
-Run:
+- Navigate to local cloned repository folder and install Syncron with:
+    
+    > `go install`
 
-```bash
-go run cmd/adhoc/main.go
-```
+- Check that Syncron has been properly installed on your environment by running
+    > `syncron -v`
+    > `syncron version 0.0.1`
+
+    - Make sure your gopath is added to your path
+      >  `export PATH=$PATH:$(go env GOPATH)/bin`
+
+
 
 ## 📖 Setup
 

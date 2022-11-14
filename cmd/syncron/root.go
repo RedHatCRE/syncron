@@ -18,11 +18,15 @@ package cmd
 import (
 	"github.com/redhatcre/syncron/pkg/cli"
 	"github.com/redhatcre/syncron/pkg/log"
+
 	"github.com/spf13/cobra"
 )
 
 var root = &cobra.Command{
+	Version:           "0.0.1",
 	Use:               "syncron",
+	Short:             "Syncron - Easily download files from s3 buckets",
+	Example:           "syncron download sosreports --days 10",
 	PersistentPreRunE: onPersistentPreRun,
 }
 
@@ -49,9 +53,7 @@ func onPersistentPreRun(cmd *cobra.Command, args []string) error {
 		},
 	}
 	for _, step := range setup {
-		err := step()
-
-		if err != nil {
+		if err := step(); err != nil {
 			return err
 		}
 	}
