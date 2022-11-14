@@ -22,9 +22,7 @@ jobs:
           version: "2022.1"
           install-go: false
       - name: "Build binary - Adhoc"
-        run: go build -v -o .go/builds/adhoc cmd/adhoc/main.go
-      - name: "Build binary - Server"
-        run: go build -v -o .go/builds/server cmd/server/main.go
+        run: go build -v -o .go/builds/syncron main.go
       - name: "Run tests - All"
         run: go test -v ./...
       - name: "Publish artifacts - Binaries"
