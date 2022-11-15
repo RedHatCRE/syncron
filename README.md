@@ -38,7 +38,7 @@ To use Syncron, two important steps must be taken.
 - Create **configuration file**. 
     - Important information about config:
         - Yaml based
-        - Path: root of the project
+        - Path: ~/.config/
         - Naming: syncron.yaml
         - A minimal syncron configuration file is as follows:
 
