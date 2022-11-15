@@ -20,3 +20,5 @@
 # Prevent configuration file from being uploaded
 syncron.yaml
 
+main
+
