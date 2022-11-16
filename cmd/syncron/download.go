@@ -20,9 +20,9 @@ import (
 
 	s3setup "github.com/redhatcre/syncron/pkg/bucketaws"
 	"github.com/redhatcre/syncron/pkg/cli"
+	"github.com/redhatcre/syncron/utils/filter"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 var download = &cobra.Command{
@@ -32,6 +32,8 @@ var download = &cobra.Command{
 	RunE:      onRun,
 	Short:     "Download files from bucket",
 }
+
+var Filter []string
 
 func init() {
 
@@ -51,10 +53,18 @@ func init() {
 		0,
 		"Download data from the last X years",
 	)
+	download.Flags().StringSliceVar(
+		&Filter,
+		"filter",
+		[]string{},
+		"Filter files to download",
+	)
+
 	root.AddCommand(download)
 }
 
 func onRun(cmd *cobra.Command, args []string) error {
+
 	Month, _ := cmd.Flags().GetInt(cli.Months)
 	Year, _ := cmd.Flags().GetInt(cli.Years)
 	Day, err := cmd.Flags().GetInt(cli.Days)
@@ -80,8 +90,8 @@ func onRun(cmd *cobra.Command, args []string) error {
 		fromDate.Year(),
 		fromDate.Month(),
 		fromDate.Day())
-
-	filesToDownload := viper.GetStringSlice(cli.SOSReports)
+	filtered, _ := cmd.Flags().GetStringSlice(cli.Filter)
+	filesToDownload := filter.Component(filtered)
 	for _, f := range filesToDownload {
 		logrus.Info("Downloading files for: ", f)
 		s3setup.DownloadFromBucket(svc, dwn, dates, f)

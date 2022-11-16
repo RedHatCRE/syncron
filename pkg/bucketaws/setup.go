@@ -20,7 +20,7 @@ import (
 	"strings"
 	"time"
 
-	files "github.com/redhatcre/syncron/utils"
+	files "github.com/redhatcre/syncron/utils/files"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"

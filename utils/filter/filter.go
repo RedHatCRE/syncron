@@ -12,26 +12,30 @@
 //    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 //    License for the specific language governing permissions and limitations
 //    under the License.
-package cli
 
-// Keywords used as arguments on the CLI.
-const (
-	Insights   string = "insights"
-	SOSReports string = "sosreports"
-	All        string = "all"
+package filter
+
+import (
+	"strings"
+
+	"github.com/redhatcre/syncron/pkg/cli"
+	"github.com/sirupsen/logrus"
+	"github.com/spf13/viper"
 )
 
-// Keywords used as flags on the CLI.
-const (
-	Debug string = "debug"
+func Component(filter []string) []string {
 
-	Days   string = "days"
-	Months string = "months"
-	Years  string = "years"
-	Filter string = "filter"
-)
-
-// Keywords used as shortcuts on the CLI.
-const (
-	D string = "d"
-)
+	var filtered []string
+	test := viper.GetStringSlice(cli.SOSReports)
+	for _, file := range test {
+		for _, comp := range filter {
+			if strings.Contains(file, comp) {
+				filtered = append(filtered, file)
+			}
+		}
+	}
+	if len(filtered) == 0 {
+		logrus.Fatal("No items found for: ", filter)
+	}
+	return filtered
+}
