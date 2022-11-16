@@ -13,6 +13,10 @@
 //    License for the specific language governing permissions and limitations
 //    under the License.
 
+// The purpose of the package filter is to reduce the download
+// to the specified files by filtering through the configuration's files,
+// downloading only the ones that match the supplied pattern given via
+// --filter flag.
 package filter
 
 import (
@@ -23,6 +27,9 @@ import (
 	"github.com/spf13/viper"
 )
 
+// The function Component will filter through the list of
+// files supplied on the configuration files, returning a slice
+// of strings that match the given pattern
 func Component(filter []string) []string {
 
 	var filtered []string
