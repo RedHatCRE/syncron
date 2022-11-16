@@ -52,10 +52,10 @@ func ProcessDate(fromDate time.Time) []string {
 // Using Viper
 // Reading from file syncron.yaml
 func ConfigRead() {
-
+	configPath := files.GetConfigPath()
 	viper.SetConfigName("syncron")
 	viper.SetConfigType("yaml")
-	viper.AddConfigPath(".config/")
+	viper.AddConfigPath(configPath)
 	viper.AddConfigPath(".")
 	viper.SetDefault("download_dir", "/tmp/syncron/")
 
