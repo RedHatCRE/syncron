@@ -21,6 +21,7 @@ import (
 	"path/filepath"
 
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 )
 
@@ -45,4 +46,12 @@ func AppendPrefix(bPrefix string) string {
 	prefix := viper.GetString("prefix")
 	fullPrefix := fmt.Sprint(prefix + bPrefix)
 	return fullPrefix
+}
+
+func GetConfigPath() string {
+	dirname, err := os.UserHomeDir()
+	if err != nil {
+		logrus.Fatal(err)
+	}
+	return dirname + "/.config/"
 }
