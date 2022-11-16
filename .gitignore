@@ -4,6 +4,7 @@
 *.dll
 *.so
 *.dylib
+main
 
 # Test binary, built with `go test -c`
 *.test
@@ -19,6 +20,7 @@
 
 # Prevent configuration file from being uploaded
 syncron.yaml
+credentials
 
-main
-
+# vim swap files
+*.swp
