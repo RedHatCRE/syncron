@@ -41,17 +41,17 @@ func Component(filter []string) []string {
 			}
 		}
 	}
-	rmDuplicates:= removeDuplicates(filtered)
 	if len(filtered) == 0 {
 		logrus.Fatal("No items found for: ", filter)
 	}
+	rmDuplicates := removeDuplicates(filtered)
 	return rmDuplicates
 }
 
-func removeDuplicates(strSlice []string) []string {
-	allKeys := make(map[string]bool)
-	list := []string{}
-	for _, item := range strSlice {
+func removeDuplicates[T string | int](sliceList []T) []T {
+	allKeys := make(map[T]bool)
+	list := []T{}
+	for _, item := range sliceList {
 		if _, value := allKeys[item]; !value {
 			allKeys[item] = true
 			list = append(list, item)
