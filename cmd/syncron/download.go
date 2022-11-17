@@ -90,8 +90,8 @@ func onRun(cmd *cobra.Command, args []string) error {
 		fromDate.Year(),
 		fromDate.Month(),
 		fromDate.Day())
-	filtered, _ := cmd.Flags().GetStringSlice(cli.Filter)
-	filesToDownload := filter.Component(filtered)
+	filterFlag, _ := cmd.Flags().GetStringSlice(cli.Filter)
+	filesToDownload := filter.Component(filterFlag)
 	for _, f := range filesToDownload {
 		logrus.Info("Downloading files for: ", f)
 		s3setup.DownloadFromBucket(svc, dwn, dates, f)

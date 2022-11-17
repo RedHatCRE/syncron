@@ -33,16 +33,29 @@ import (
 func Component(filter []string) []string {
 
 	var filtered []string
-	test := viper.GetStringSlice(cli.SOSReports)
-	for _, file := range test {
+	files_in_config := viper.GetStringSlice(cli.SOSReports)
+	for _, file := range files_in_config {
 		for _, comp := range filter {
 			if strings.Contains(file, comp) {
 				filtered = append(filtered, file)
 			}
 		}
 	}
+	rmDuplicates:= removeDuplicates(filtered)
 	if len(filtered) == 0 {
 		logrus.Fatal("No items found for: ", filter)
 	}
-	return filtered
+	return rmDuplicates
+}
+
+func removeDuplicates(strSlice []string) []string {
+	allKeys := make(map[string]bool)
+	list := []string{}
+	for _, item := range strSlice {
+		if _, value := allKeys[item]; !value {
+			allKeys[item] = true
+			list = append(list, item)
+		}
+	}
+	return list
 }
