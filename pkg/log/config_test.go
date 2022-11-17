@@ -35,7 +35,10 @@ func (suite *ConfigureTestSuite) TestLevelOnDebug() {
 	parser := new(mocks.CLIParserMock)
 	parser.On("GetDebug").Return(true)
 
-	log.Configure(parser)
+	err := log.Configure(parser)
+	if err != nil {
+		logrus.Error("An error occured configuring logs", err)
+	}
 
 	assert.Equal(suite.T(), logrus.TraceLevel, logrus.GetLevel())
 }
@@ -46,8 +49,10 @@ func (suite *ConfigureTestSuite) TestLevelOnNoDebug() {
 	parser := new(mocks.CLIParserMock)
 	parser.On("GetDebug").Return(false)
 
-	log.Configure(parser)
-
+	err := log.Configure(parser)
+	if err != nil {
+		logrus.Error("An error occured configuring logs", err)
+	}
 	assert.Equal(suite.T(), logrus.InfoLevel, logrus.GetLevel())
 }
 

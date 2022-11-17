@@ -30,7 +30,10 @@ import (
 func FilePathSetup(key *string, dwn *s3manager.Downloader) (*os.File, string) {
 
 	download_dir := viper.GetString("download_dir")
-	os.MkdirAll(download_dir+filepath.Dir(*key), 0700)
+	err := os.MkdirAll(download_dir+filepath.Dir(*key), 0700)
+	if err != nil {
+		logrus.Fatal("An error ocurred creating paths", err)
+	}
 	fileName := filepath.Base(*key)
 	fooFile, err := os.Create(download_dir + filepath.Dir(*key) + "/" + fileName)
 	if err != nil {

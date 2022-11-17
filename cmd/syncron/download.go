@@ -94,7 +94,10 @@ func onRun(cmd *cobra.Command, args []string) error {
 	filesToDownload := filter.Component(filterFlag)
 	for _, f := range filesToDownload {
 		logrus.Info("Downloading files for: ", f)
-		s3setup.DownloadFromBucket(svc, dwn, dates, f)
+		err := s3setup.DownloadFromBucket(svc, dwn, dates, f)
+		if err != nil {
+			logrus.Error("Error downloading:", f, err)
+		}
 	}
 	return nil
 }
