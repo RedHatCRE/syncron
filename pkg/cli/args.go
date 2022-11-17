@@ -28,6 +28,7 @@ const (
 	Days   string = "days"
 	Months string = "months"
 	Years  string = "years"
+	Filter string = "filter"
 )
 
 // Keywords used as shortcuts on the CLI.
