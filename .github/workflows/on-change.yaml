@@ -21,10 +21,12 @@ jobs:
         with:
           version: "2022.1"
           install-go: false
-      - name: "Build binary - Adhoc"
+      - name: "Build syncron binary"
         run: go build -v -o .go/builds/syncron main.go
       - name: "Run tests - All"
         run: go test -v ./...
+      - name: Run golangci-lint
+        uses: golangci/golangci-lint-action@v3.3.1
       - name: "Publish artifacts - Binaries"
         uses: actions/upload-artifact@v3
         with:
