@@ -30,24 +30,30 @@ import (
 // The function Component will filter through the list of
 // files supplied on the configuration files, returning a slice
 // of strings that match the given pattern
-func Component(filter []string) []string {
-
+func Component(filterFlag []string) []string {
 	var filtered []string
 	files_in_config := viper.GetStringSlice(cli.SOSReports)
+	
+	if len(filterFlag) == 0 {
+		return files_in_config
+	}
 	for _, file := range files_in_config {
-		for _, comp := range filter {
+		for _, comp := range filterFlag {
 			if strings.Contains(file, comp) {
 				filtered = append(filtered, file)
 			}
 		}
 	}
 	if len(filtered) == 0 {
-		logrus.Fatal("No items found for: ", filter)
+		logrus.Fatal("Filter item(s) not found")
 	}
 	rmDuplicates := removeDuplicates(filtered)
 	return rmDuplicates
 }
 
+// This function iterates through the given slice and removes
+// any duplicate keys in the slice, returning a list without
+// any duplicates.
 func removeDuplicates[T string | int](sliceList []T) []T {
 	allKeys := make(map[T]bool)
 	list := []T{}
@@ -59,3 +65,11 @@ func removeDuplicates[T string | int](sliceList []T) []T {
 	}
 	return list
 }
+
+//func emptyFlag(flagSlice []string) []string {
+//	files_in_config := viper.GetStringSlice(cli.SOSReports)
+//	if len(flagSlice) == 0 {
+//		return files_in_config
+//	}
+//}
+//
