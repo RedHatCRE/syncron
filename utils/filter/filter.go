@@ -33,7 +33,7 @@ import (
 func Component(filterFlag []string) []string {
 	var filtered []string
 	files_in_config := viper.GetStringSlice(cli.SOSReports)
-	
+
 	if len(filterFlag) == 0 {
 		return files_in_config
 	}
@@ -65,11 +65,3 @@ func removeDuplicates[T string | int](sliceList []T) []T {
 	}
 	return list
 }
-
-//func emptyFlag(flagSlice []string) []string {
-//	files_in_config := viper.GetStringSlice(cli.SOSReports)
-//	if len(flagSlice) == 0 {
-//		return files_in_config
-//	}
-//}
-//
