@@ -35,11 +35,14 @@ func FilePathSetup(key *string, dwn *s3manager.Downloader) (*os.File, string) {
 		logrus.Fatal("An error ocurred creating paths", err)
 	}
 	fileName := filepath.Base(*key)
-	fooFile, err := os.Create(download_dir + filepath.Dir(*key) + "/" + fileName)
+
+	fileHandler, err := os.Create(filepath.Clean(download_dir + filepath.Dir(*key) + "/" + fileName))
+
 	if err != nil {
 		fmt.Println(err)
 	}
-	return fooFile, fileName
+
+	return fileHandler, fileName
 }
 
 // This function appends the prefix to components

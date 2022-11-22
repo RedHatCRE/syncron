@@ -112,11 +112,11 @@ func DownloadFromBucket(svc *s3.S3, dwn *s3manager.Downloader, dates []string, b
 		for _, item := range resp.Contents {
 			for _, x := range dates {
 				if strings.Contains(*item.Key, x) {
-					fooFile, fileName := files.FilePathSetup(item.Key, dwn)
+					fileHandler, fileName := files.FilePathSetup(item.Key, dwn)
 					logrus.Info("Downloading ", fileName)
 					start := time.Now()
 					_, err := dwn.Download(
-						fooFile,
+						fileHandler,
 						&s3.GetObjectInput{
 							Bucket: aws.String(viper.GetString("bucket")),
 							Key:    aws.String(*item.Key),
@@ -127,6 +127,11 @@ func DownloadFromBucket(svc *s3.S3, dwn *s3manager.Downloader, dates []string, b
 						fmt.Println("There was an error fetching key info.", err)
 						return err
 					}
+					defer func() {
+						if err := fileHandler.Close(); err != nil {
+							logrus.Print("Error closing file handler for: ", fileName)
+						}
+					}()
 				}
 			}
 		}
