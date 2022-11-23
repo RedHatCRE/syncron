@@ -50,11 +50,11 @@ func ProcessDate(fromDate time.Time) []string {
 
 // Initialize a session with AWS SDK
 // It will read from the file located at ~/.aws/credentials and syncron/syncron.yaml
-func SetupSession(c configuration.Configuration) *session.Session {
+func SetupSession(config configuration.Configuration) *session.Session {
 
 	sess, err := session.NewSession(&aws.Config{
-		Region:   aws.String(c.S3.Region),
-		Endpoint: aws.String(c.S3.EndPoint),
+		Region:   aws.String(config.S3.Region),
+		Endpoint: aws.String(config.S3.EndPoint),
 	},
 	)
 	if err != nil {
@@ -76,14 +76,14 @@ func AccessBucket(sess *session.Session) (*s3.S3, *s3manager.Downloader) {
 
 // This function takes care of listing the keys in the bucket, filtering
 // through those that are needed.
-func DownloadFromBucket(c configuration.Configuration, svc *s3.S3, dwn *s3manager.Downloader, dates []string, bprefix string) error {
+func DownloadFromBucket(config configuration.Configuration, svc *s3.S3, dwn *s3manager.Downloader, dates []string, bprefix string) error {
 
 	var continuationToken *string
 
 	for {
 		resp, err := svc.ListObjectsV2(&s3.ListObjectsV2Input{
-			Bucket:            aws.String(c.S3.Bucket),
-			Prefix:            aws.String(files.AppendPrefix(c.Prefix, bprefix)),
+			Bucket:            aws.String(config.S3.Bucket),
+			Prefix:            aws.String(files.AppendPrefix(config.Prefix, bprefix)),
 			ContinuationToken: continuationToken,
 		})
 		if err != nil {
@@ -98,7 +98,7 @@ func DownloadFromBucket(c configuration.Configuration, svc *s3.S3, dwn *s3manage
 
 				logrus.Info("Downloading files for: ", bprefix)
 
-				absoluteFileName := files.GetDownloadPath(c.DownloadDir, *item.Key)
+				absoluteFileName := files.GetDownloadPath(config.DownloadDir, *item.Key)
 
 				if files.FileExists(absoluteFileName) {
 					logrus.Info("File already exists: ", absoluteFileName)
@@ -112,7 +112,7 @@ func DownloadFromBucket(c configuration.Configuration, svc *s3.S3, dwn *s3manage
 				_, err := dwn.Download(
 					fileHandler,
 					&s3.GetObjectInput{
-						Bucket: aws.String(c.S3.Bucket),
+						Bucket: aws.String(config.S3.Bucket),
 						Key:    aws.String(*item.Key),
 					})
 				duration := time.Since(start)
