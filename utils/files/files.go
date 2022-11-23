@@ -58,3 +58,10 @@ func AppendPrefix(bPrefix string) string {
 	fullPrefix := fmt.Sprint(prefix + bPrefix)
 	return fullPrefix
 }
+
+// Get the absolute download path of the file
+func GetDownloadPath(key string) string {
+	download_dir := viper.GetString("download_dir")
+	fileName := filepath.Base(key)
+	return filepath.Clean(download_dir + filepath.Dir(key) + "/" + fileName)
+}

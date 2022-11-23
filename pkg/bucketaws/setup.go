@@ -18,7 +18,6 @@ package s3setup
 import (
 	"fmt"
 	"os"
-	"path/filepath"
 	"strings"
 	"time"
 
@@ -121,7 +120,7 @@ func DownloadFromBucket(svc *s3.S3, dwn *s3manager.Downloader, dates []string, b
 		for _, item := range resp.Contents {
 			for _, x := range dates {
 				if strings.Contains(*item.Key, x) {
-					absoluteFileName := getDownloadPath(*item.Key)
+					absoluteFileName := files.GetDownloadPath(*item.Key)
 
 					if files.FileExists(absoluteFileName) {
 						logrus.Info("File already exists: ", absoluteFileName)
@@ -170,11 +169,4 @@ func Credcheck(sess *session.Session) {
 			"Error reading credentials file. Check README for help.\n")
 	}
 	logrus.Info("Credentials file read succesfully")
-}
-
-// Get the absolute download path of the file
-func getDownloadPath(key string) string {
-	download_dir := viper.GetString("download_dir")
-	fileName := filepath.Base(key)
-	return filepath.Clean(download_dir + filepath.Dir(key) + "/" + fileName)
 }
