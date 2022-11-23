@@ -17,10 +17,10 @@ package s3setup
 
 import (
 	"fmt"
-	"os"
 	"strings"
 	"time"
 
+	"github.com/redhatcre/syncron/configuration"
 	files "github.com/redhatcre/syncron/utils/files"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -28,7 +28,6 @@ import (
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 	"github.com/sirupsen/logrus"
-	"github.com/spf13/viper"
 )
 
 // Builds dates from given date to current date,
@@ -49,40 +48,13 @@ func ProcessDate(fromDate time.Time) []string {
 	return dates
 }
 
-// Setting up file formatting
-// Using Viper
-// Reading from file syncron.yaml
-func ConfigRead() {
-	userDirConfig, err := os.UserConfigDir()
-
-	if err != nil {
-		logrus.Fatal(err)
-	}
-
-	viper.SetConfigName("syncron")
-	viper.SetConfigType("yaml")
-	viper.AddConfigPath(userDirConfig)
-	viper.AddConfigPath(".")
-	viper.SetDefault("download_dir", "/tmp/syncron/")
-
-	// Reading from file
-	err = viper.ReadInConfig()
-
-	if err != nil {
-		logrus.Fatal(err)
-	}
-
-	logrus.Info("Your configuration file was read succesfully")
-	logrus.Info("Reading from bucket: ", viper.Get("bucket"))
-}
-
 // Initialize a session with AWS SDK
 // It will read from the file located at ~/.aws/credentials and syncron/syncron.yaml
-func SetupSession() *session.Session {
+func SetupSession(config configuration.Configuration) *session.Session {
 
 	sess, err := session.NewSession(&aws.Config{
-		Region:   aws.String(viper.GetString("s3.region")),
-		Endpoint: aws.String(viper.GetString("s3.endpoint")),
+		Region:   aws.String(config.S3.Region),
+		Endpoint: aws.String(config.S3.EndPoint),
 	},
 	)
 	if err != nil {
@@ -104,14 +76,14 @@ func AccessBucket(sess *session.Session) (*s3.S3, *s3manager.Downloader) {
 
 // This function takes care of listing the keys in the bucket, filtering
 // through those that are needed.
-func DownloadFromBucket(svc *s3.S3, dwn *s3manager.Downloader, dates []string, bprefix string) error {
+func DownloadFromBucket(config configuration.Configuration, svc *s3.S3, dwn *s3manager.Downloader, dates []string, bprefix string) error {
 
 	var continuationToken *string
 
 	for {
 		resp, err := svc.ListObjectsV2(&s3.ListObjectsV2Input{
-			Bucket:            aws.String(viper.GetString("bucket")),
-			Prefix:            aws.String(files.AppendPrefix(bprefix)),
+			Bucket:            aws.String(config.S3.Bucket),
+			Prefix:            aws.String(files.AppendPrefix(config.Prefix, bprefix)),
 			ContinuationToken: continuationToken,
 		})
 		if err != nil {
@@ -119,38 +91,44 @@ func DownloadFromBucket(svc *s3.S3, dwn *s3manager.Downloader, dates []string, b
 		}
 		for _, item := range resp.Contents {
 			for _, x := range dates {
-				if strings.Contains(*item.Key, x) {
-					absoluteFileName := files.GetDownloadPath(*item.Key)
 
-					if files.FileExists(absoluteFileName) {
-						logrus.Info("File already exists: ", absoluteFileName)
-						continue
-					}
-
-					fileHandler := files.FilePathSetup(absoluteFileName)
-
-					logrus.Info("Downloading ", absoluteFileName)
-					start := time.Now()
-					_, err := dwn.Download(
-						fileHandler,
-						&s3.GetObjectInput{
-							Bucket: aws.String(viper.GetString("bucket")),
-							Key:    aws.String(*item.Key),
-						})
-					duration := time.Since(start)
-					logrus.Info("Download took: ", duration.Truncate(time.Second/2))
-
-					if err != nil {
-						fmt.Println("There was an error fetching key info.", err)
-						return err
-					}
-
-					defer func() {
-						if err := fileHandler.Close(); err != nil {
-							logrus.Print("Error closing file handler for: ", absoluteFileName)
-						}
-					}()
+				if !strings.Contains(*item.Key, x) {
+					continue
 				}
+
+				logrus.Info("Downloading files for: ", bprefix)
+
+				absoluteFileName := files.GetDownloadPath(config.DownloadDir, *item.Key)
+
+				if files.FileExists(absoluteFileName) {
+					logrus.Info("File already exists: ", absoluteFileName)
+					continue
+				}
+
+				fileHandler := files.FilePathSetup(absoluteFileName)
+
+				logrus.Info("Downloading ", absoluteFileName)
+				start := time.Now()
+				_, err := dwn.Download(
+					fileHandler,
+					&s3.GetObjectInput{
+						Bucket: aws.String(config.S3.Bucket),
+						Key:    aws.String(*item.Key),
+					})
+				duration := time.Since(start)
+				logrus.Info("Download took: ", duration.Truncate(time.Second/2))
+
+				if err != nil {
+					fmt.Println("There was an error fetching key info.", err)
+					return err
+				}
+
+				defer func() {
+					if err := fileHandler.Close(); err != nil {
+						logrus.Print("Error closing file handler for: ", absoluteFileName)
+					}
+				}()
+
 			}
 		}
 		if !aws.BoolValue(resp.IsTruncated) {
@@ -162,11 +140,13 @@ func DownloadFromBucket(svc *s3.S3, dwn *s3manager.Downloader, dates []string, b
 }
 
 // Check AWS credentials are correct
-func Credcheck(sess *session.Session) {
+func CredCheck(sess *session.Session) {
 	_, err := sess.Config.Credentials.Get()
+
 	if err != nil {
 		logrus.Fatal(
 			"Error reading credentials file. Check README for help.\n")
 	}
+
 	logrus.Info("Credentials file read succesfully")
 }
