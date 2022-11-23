@@ -25,8 +25,8 @@ import (
 )
 
 // Creates a folder/file given the path in a recursive way
-// If the path finish with '/' it will create a file
-// Otherwise it will create a folder
+// If the path finish with '/' it will create a folder
+// Otherwise it will create a file
 func FilePathSetup(absoluteFilePath string) *os.File {
 	err := os.MkdirAll(filepath.Dir(absoluteFilePath), 0750)
 
