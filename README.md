@@ -42,15 +42,15 @@ To use Syncron, two important steps must be taken.
         - Naming: syncron.yaml
         - A minimal syncron configuration file is as follows:
 
-
             ```yaml
-            bucket: "<name of bucket to pull from>"
             s3:
               endpoint: "<endpoint>"
               region: "<region>"
+              bucket: "<name of bucket to pull from>"
             prefix: "<targeted keys starting path>"
-            download_dir: "<path where files will be downloaded>"
+            downloadDir: "<path where files will be downloaded>"
             ```
+
 - Proper credentials must be present on running machine at $HOME/.aws/credentials
 
 The credentials file has the following format:

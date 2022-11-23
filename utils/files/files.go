@@ -21,7 +21,6 @@ import (
 	"path/filepath"
 
 	"github.com/sirupsen/logrus"
-	"github.com/spf13/viper"
 )
 
 // Creates a folder/file given the path in a recursive way
@@ -52,16 +51,12 @@ func FileExists(filePath string) bool {
 
 // This function appends the prefix to components
 // Make sure prefix variable is initiated  properly in config file
-func AppendPrefix(bPrefix string) string {
-
-	prefix := viper.GetString("prefix")
-	fullPrefix := fmt.Sprint(prefix + bPrefix)
-	return fullPrefix
+func AppendPrefix(prefix string, bPrefix string) string {
+	return fmt.Sprint(prefix + bPrefix)
 }
 
-// Get the absolute download path of the file
-func GetDownloadPath(key string) string {
-	download_dir := viper.GetString("download_dir")
-	fileName := filepath.Base(key)
-	return filepath.Clean(download_dir + filepath.Dir(key) + "/" + fileName)
+// Get the absolute download path of the file based on
+// the folder and the file
+func GetDownloadPath(downloadDir string, destinationFile string) string {
+	return filepath.Join(filepath.Clean(downloadDir), filepath.Clean(destinationFile))
 }

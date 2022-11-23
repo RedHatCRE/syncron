@@ -18,6 +18,7 @@ package cmd
 import (
 	"time"
 
+	"github.com/redhatcre/syncron/configuration"
 	s3setup "github.com/redhatcre/syncron/pkg/bucketaws"
 	"github.com/redhatcre/syncron/pkg/cli"
 	"github.com/redhatcre/syncron/utils/filter"
@@ -76,11 +77,13 @@ func onRun(cmd *cobra.Command, args []string) error {
 	fromDate := time.Now().AddDate(-Year, -Month, -Day)
 
 	// Reading configuration file
-	s3setup.ConfigRead()
+
+	c := configuration.Configuration{}
+	c.GetConfiguration()
 	// Creating AWS session
-	sess := s3setup.SetupSession()
+	sess := s3setup.SetupSession(c)
 	//Checking credentials
-	s3setup.Credcheck(sess)
+	s3setup.CredCheck(sess)
 	// Processing dates to download
 	dates := s3setup.ProcessDate(fromDate)
 	// Accessing bucket
@@ -95,10 +98,9 @@ func onRun(cmd *cobra.Command, args []string) error {
 		fromDate.Day(),
 	)
 	for _, f := range filesToDownload {
-		logrus.Info("Downloading files for: ", f)
-		err := s3setup.DownloadFromBucket(svc, dwn, dates, f)
+		err := s3setup.DownloadFromBucket(c, svc, dwn, dates, f)
 		if err != nil {
-			logrus.Error("Error downloading:", f, err)
+			logrus.Error("Error downloading: ", f, err)
 		}
 	}
 	return nil
