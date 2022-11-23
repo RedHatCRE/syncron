@@ -17,6 +17,7 @@ package s3setup
 
 import (
 	"fmt"
+	"os"
 	"strings"
 	"time"
 
@@ -52,18 +53,25 @@ func ProcessDate(fromDate time.Time) []string {
 // Using Viper
 // Reading from file syncron.yaml
 func ConfigRead() {
-	configPath := files.GetConfigPath()
+	userDirConfig, err := os.UserConfigDir()
+
+	if err != nil {
+		logrus.Fatal(err)
+	}
+
 	viper.SetConfigName("syncron")
 	viper.SetConfigType("yaml")
-	viper.AddConfigPath(configPath)
+	viper.AddConfigPath(userDirConfig)
 	viper.AddConfigPath(".")
 	viper.SetDefault("download_dir", "/tmp/syncron/")
 
 	// Reading from file
-	err := viper.ReadInConfig()
+	err = viper.ReadInConfig()
+
 	if err != nil {
 		logrus.Fatal(err)
 	}
+
 	logrus.Info("Your configuration file was read succesfully")
 	logrus.Info("Reading from bucket: ", viper.Get("bucket"))
 }
@@ -112,8 +120,16 @@ func DownloadFromBucket(svc *s3.S3, dwn *s3manager.Downloader, dates []string, b
 		for _, item := range resp.Contents {
 			for _, x := range dates {
 				if strings.Contains(*item.Key, x) {
-					fileHandler, fileName := files.FilePathSetup(item.Key, dwn)
-					logrus.Info("Downloading ", fileName)
+					absoluteFileName := files.GetDownloadPath(*item.Key)
+
+					if files.FileExists(absoluteFileName) {
+						logrus.Info("File already exists: ", absoluteFileName)
+						continue
+					}
+
+					fileHandler := files.FilePathSetup(absoluteFileName)
+
+					logrus.Info("Downloading ", absoluteFileName)
 					start := time.Now()
 					_, err := dwn.Download(
 						fileHandler,
@@ -123,13 +139,15 @@ func DownloadFromBucket(svc *s3.S3, dwn *s3manager.Downloader, dates []string, b
 						})
 					duration := time.Since(start)
 					logrus.Info("Download took: ", duration.Truncate(time.Second/2))
+
 					if err != nil {
 						fmt.Println("There was an error fetching key info.", err)
 						return err
 					}
+
 					defer func() {
 						if err := fileHandler.Close(); err != nil {
-							logrus.Print("Error closing file handler for: ", fileName)
+							logrus.Print("Error closing file handler for: ", absoluteFileName)
 						}
 					}()
 				}

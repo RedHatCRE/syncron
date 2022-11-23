@@ -20,29 +20,34 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 )
 
-// This function takes a key from s3 and prepares the system for
-// download by recursively creating the path needed.
-func FilePathSetup(key *string, dwn *s3manager.Downloader) (*os.File, string) {
-
-	download_dir := viper.GetString("download_dir")
-	err := os.MkdirAll(download_dir+filepath.Dir(*key), 0700)
-	if err != nil {
-		logrus.Fatal("An error ocurred creating paths", err)
-	}
-	fileName := filepath.Base(*key)
-
-	fileHandler, err := os.Create(filepath.Clean(download_dir + filepath.Dir(*key) + "/" + fileName))
+// Creates a folder/file given the path in a recursive way
+// If the path finish with '/' it will create a folder
+// Otherwise it will create a file
+func FilePathSetup(absoluteFilePath string) *os.File {
+	err := os.MkdirAll(filepath.Dir(absoluteFilePath), 0750)
 
 	if err != nil {
-		fmt.Println(err)
+		logrus.Fatal(err)
 	}
 
-	return fileHandler, fileName
+	fileHandler, err := os.Create(filepath.Clean(absoluteFilePath))
+
+	if err != nil {
+		logrus.Fatal(err)
+	}
+
+	return fileHandler
+}
+
+func FileExists(filePath string) bool {
+	if _, err := os.Stat(filePath); err == nil {
+		return true
+	}
+	return false
 }
 
 // This function appends the prefix to components
@@ -54,10 +59,9 @@ func AppendPrefix(bPrefix string) string {
 	return fullPrefix
 }
 
-func GetConfigPath() string {
-	dirname, err := os.UserHomeDir()
-	if err != nil {
-		logrus.Fatal(err)
-	}
-	return dirname + "/.config/"
+// Get the absolute download path of the file
+func GetDownloadPath(key string) string {
+	download_dir := viper.GetString("download_dir")
+	fileName := filepath.Base(key)
+	return filepath.Clean(download_dir + filepath.Dir(key) + "/" + fileName)
 }
