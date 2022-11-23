@@ -28,10 +28,10 @@ import (
 // If the path finish with '/' it will create a file
 // Otherwise it will create a folder
 func FilePathSetup(absoluteFilePath string) *os.File {
-	if err := os.MkdirAll(filepath.Dir(absoluteFilePath), 0750); err != nil {
-		if err != nil {
-			logrus.Fatal(err)
-		}
+	err := os.MkdirAll(filepath.Dir(absoluteFilePath), 0750)
+
+	if err != nil {
+		logrus.Fatal(err)
 	}
 
 	fileHandler, err := os.Create(filepath.Clean(absoluteFilePath))
