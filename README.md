@@ -1,5 +1,5 @@
 <div align="center">
-  <img alt="cgapp logo" src="https://seeklogo.com/images/G/go-logo-046185B647-seeklogo.com.png" width="100px"/>
+  <img alt="cgapp logo" src="https://i.imgur.com/QdUJPDU.png" width="100px"/>
 
 # Syncron
 
