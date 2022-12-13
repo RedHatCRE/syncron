@@ -18,7 +18,9 @@ package files
 import (
 	"fmt"
 	"os"
+	"path"
 	"path/filepath"
+	"strings"
 
 	"github.com/sirupsen/logrus"
 )
@@ -59,4 +61,10 @@ func AppendPrefix(prefix string, bPrefix string) string {
 // the folder and the file
 func GetDownloadPath(downloadDir string, destinationFile string) string {
 	return filepath.Join(filepath.Clean(downloadDir), filepath.Clean(destinationFile))
+}
+
+
+func RemoveExtention(fileName string) string {
+	fileExt := path.Ext(fileName)
+	return strings.TrimSuffix(fileName, fileExt)
 }

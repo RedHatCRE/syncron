@@ -19,6 +19,7 @@ const (
 	Insights   string = "insights"
 	SOSReports string = "sosreports"
 	All        string = "all"
+	Parquet    string = "parquet"
 )
 
 // Keywords used as flags on the CLI.
@@ -29,6 +30,8 @@ const (
 	Months string = "months"
 	Years  string = "years"
 	Filter string = "filter"
+	Output string = "output"
+	File   string = "file"
 )
 
 // Keywords used as shortcuts on the CLI.

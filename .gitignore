@@ -24,3 +24,5 @@ credentials
 
 # vim swap files
 *.swp
+
+*.parquet

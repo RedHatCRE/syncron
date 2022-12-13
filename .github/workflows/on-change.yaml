@@ -24,7 +24,7 @@ jobs:
       - name: Run Gosec Security Scanner
         uses: securego/gosec@master
         with:
-          args: ./...
+          args:  ./...
       - name: "Build syncron binary"
         run: go build -v -o .go/builds/syncron main.go
       - name: "Run tests - All"
