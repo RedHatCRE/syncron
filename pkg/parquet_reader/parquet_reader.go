@@ -59,13 +59,13 @@ func ReadParquet(outputFile string, fileToRead string) {
 			fmt.Fprintf(os.Stderr, "error: output %q cannot be created, %s\n", cli.Output, err)
 			os.Exit(1)
 		}
-		bufOut := bufio.NewWriter(fileOut)
+		bufOut := bufio.NewWriter(fileOut) 
 		defer func() {
-			bufOut.Flush()
+			bufOut.Flush() // #nosec G104
 			if err != nil {
 				logrus.Fatal(err)
 			}
-			fileOut.Close()
+			fileOut.Close() // #nosec G104
 			if err != nil {
 				logrus.Fatal(err)
 			}
