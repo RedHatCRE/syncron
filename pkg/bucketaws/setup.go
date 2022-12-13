@@ -120,7 +120,6 @@ func DownloadFromBucket(config configuration.Configuration, svc *s3.S3, dwn *s3m
 					fmt.Println("There was an error fetching key info.", err)
 					return err
 				}
-
 				// Handle Parquet file
 				noExtFileName := files.RemoveExtention(absoluteFileName)
 				parquet_reader.ReadParquet(noExtFileName, absoluteFileName)

@@ -25,10 +25,12 @@ import (
 	"io"
 	"log"
 	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 
 	"github.com/apache/arrow/go/v11/parquet/file"
+	"github.com/sirupsen/logrus"
 
 	"github.com/redhatcre/syncron/pkg/cli"
 	"github.com/redhatcre/syncron/pkg/dumper"
@@ -52,7 +54,7 @@ func ReadParquet(outputFile string, fileToRead string) {
 	dataOut = os.Stdout
 	if outputFile != "-" {
 		var err error
-		fileOut, err := os.Create(outputFile)
+		fileOut, err := os.Create(filepath.Clean(outputFile))
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "error: output %q cannot be created, %s\n", cli.Output, err)
 			os.Exit(1)
@@ -60,7 +62,13 @@ func ReadParquet(outputFile string, fileToRead string) {
 		bufOut := bufio.NewWriter(fileOut)
 		defer func() {
 			bufOut.Flush()
+			if err != nil {
+				logrus.Fatal(err)
+			}
 			fileOut.Close()
+			if err != nil {
+				logrus.Fatal(err)
+			}
 		}()
 		dataOut = bufOut
 	}
@@ -87,7 +95,7 @@ func ReadParquet(outputFile string, fileToRead string) {
 		fmt.Fprintln(os.Stderr, "error opening parquet file: ", err)
 		os.Exit(1)
 	}
-	
+
 	fileMetadata := rdr.MetaData()
 
 	// If statement below checks whether the selectedColumns slice is empty. If it is empty,
@@ -123,7 +131,7 @@ func ReadParquet(outputFile string, fileToRead string) {
 		}
 		fmt.Fprintln(dataOut)
 
-		// This for loop iterates over the scanners and fetches the next value
+		// Below for loop iterates over the scanners and fetches the next value
 		// from each scanner using the Next method. If the value exists, it is
 		// formatted using the FormatValue method and printed to the dataOut
 		// writer along with a "|" character. If the value does not exist, the
@@ -131,14 +139,14 @@ func ReadParquet(outputFile string, fileToRead string) {
 		// or prints an empty string to the dataOut writer, depending on whether
 		// data has been printed in the current iteration. The loop breaks if no
 		// data is printed in an iteration.
-		//var line string
+		var line string
 		for {
 			data := false
 			for _, s := range scanners {
 				if val, ok := s.Next(); ok {
-					//if !data {
-					//	fmt.Fprint(dataOut, line)
-					//}
+					if !data {
+						fmt.Fprint(dataOut, line)
+					}
 					fmt.Fprint(dataOut, s.FormatValue(val, colwidth), "|")
 					data = true
 				} //else {
@@ -152,12 +160,12 @@ func ReadParquet(outputFile string, fileToRead string) {
 			if !data {
 				break
 			}
-			//fmt.Fprintln(dataOut)
-			//line = ""
+			fmt.Fprintln(dataOut)
+			line = ""
 		}
-		//_, err := fmt.Fprintln(dataOut)
-		//if err != nil {
-		//	logrus.Error("Following error reading line", err)
-		//}
+		_, err := fmt.Fprintln(dataOut)
+		if err != nil {
+			logrus.Error("Following error reading line", err)
+		}
 	}
 }
