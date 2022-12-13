@@ -80,6 +80,7 @@ func onRun(cmd *cobra.Command, args []string) error {
 
 	c := configuration.Configuration{}
 	c.GetConfiguration()
+
 	// Creating AWS session
 	sess := s3setup.SetupSession(c)
 	//Checking credentials
@@ -88,7 +89,6 @@ func onRun(cmd *cobra.Command, args []string) error {
 	dates := s3setup.ProcessDate(fromDate)
 	// Accessing bucket
 	svc, dwn := s3setup.AccessBucket(sess)
-
 	filterFlag, _ := cmd.Flags().GetStringSlice(cli.Filter)
 	filesToDownload := filter.Component(filterFlag)
 

@@ -23,7 +23,7 @@ import (
 )
 
 var root = &cobra.Command{
-	Version:           "0.0.1",
+	Version:           "0.0.2",
 	Use:               "syncron",
 	Short:             "Syncron - Easily download files from s3 buckets",
 	Example:           "syncron download sosreports --days 10",

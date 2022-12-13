@@ -47,14 +47,14 @@ func Component(filterFlag []string) []string {
 	if len(filtered) == 0 {
 		logrus.Fatal("Filter item(s) not found")
 	}
-	rmDuplicates := removeDuplicates(filtered)
+	rmDuplicates := RemoveDuplicates(filtered)
 	return rmDuplicates
 }
 
 // This function iterates through the given slice and removes
 // any duplicate keys in the slice, returning a list without
 // any duplicates.
-func removeDuplicates[T string | int](sliceList []T) []T {
+func RemoveDuplicates[T string | int](sliceList []T) []T {
 	allKeys := make(map[T]bool)
 	list := []T{}
 	for _, item := range sliceList {

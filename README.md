@@ -67,21 +67,36 @@ aws_secret_access_key = "XXXXXXX"
 The user is given several flags to pick which time frame to pull data from.
 
 ```bash
-go run cmd/adhoc/main.go download [option] [--flag] [number]
+syncron download [option] [--flag] [number]
 ```
 
-| Option | Description                                              | Type   | Default | Required? |
+> ##### *Download files*
+
+| Option | Description                                              | Type   | Required? |
 |--------|----------------------------------------------------------|--------|---------|-----------|
-| `sosreports`   | Download sosreports files.| `string` | `sosreports` | Yes        |
+| `download`   | Download files.| `string` | No        |
+| `read-parquet`   | Read local parquet files.| `string` | No        |
 
 | --flag | Description                                              | Type   | Default | Required? |
 |--------|----------------------------------------------------------|--------|---------|-----------|
 | `days`   | Download files from the past x days. | `int` | `2` | No        |
 | `months`   | Download files from the past x months. | `int` | `0` | No        |
 | `years`   | Download files from the past x years. | `int` | `0` | No        |
+| `filter`   | Filter files to download | `[]str` | []str{} | No        |
 
+| Option | Description                                              | Type   | Default | Required? |
+|--------|----------------------------------------------------------|--------|---------|-----------|
+| `sosreports`   | Download sosreports files.| `string` | `sosreports` | Yes        |
 
+> ##### *Read parquet files*
+| Option | Description                                              | Type   | Required? |
+|--------|----------------------------------------------------------|--------|---------|-----------|
+| `read-parquet`   | Read local parquet files.| `string` | No        |
 
+| --flag | Description                                              | Type   | Default | Required? |
+|--------|----------------------------------------------------------|--------|---------|-----------|
+| `file`   | What file to read. | `str` | `-` | Yes        |
+| `output`   | Path to place unpacked file. | `str` |  | Yes        |
 ## ⚠️ License
 
 `Syncron` is free and open-source software licensed under the [Apache 2.0 License](https://github.com/RedHatCRE/syncron/blob/main/LICENSE). 

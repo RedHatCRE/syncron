@@ -1,7 +1,6 @@
 package configuration
 
 import (
-	"log"
 	"os"
 
 	"github.com/sirupsen/logrus"
@@ -39,15 +38,12 @@ func (c *Configuration) GetConfiguration() *Configuration {
 
 	// Reading from file
 	err = viper.ReadInConfig()
-
 	if err != nil {
-		logrus.Fatal(err)
+		logrus.Fatal("Following error reading from config file", err)
 	}
-
 	err = viper.Unmarshal(&c)
-
 	if err != nil {
-		log.Fatal(err)
+		logrus.Fatal("Error structuring configuration", err)
 	}
 
 	if c.DownloadDir == "" {

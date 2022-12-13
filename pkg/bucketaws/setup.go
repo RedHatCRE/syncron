@@ -21,6 +21,7 @@ import (
 	"time"
 
 	"github.com/redhatcre/syncron/configuration"
+	"github.com/redhatcre/syncron/pkg/parquet_reader"
 	files "github.com/redhatcre/syncron/utils/files"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -67,19 +68,17 @@ func SetupSession(config configuration.Configuration) *session.Session {
 // This function initiates the service for downloading files in s3
 func AccessBucket(sess *session.Session) (*s3.S3, *s3manager.Downloader) {
 
-	logrus.Info("Accessing bucket...")
 	svc := s3.New(sess)
 	dwn := s3manager.NewDownloader(sess)
 
 	return svc, dwn
 }
 
-// This function takes care of listing the keys in the bucket, filtering
+// This function downloads files from bucket, filtering
 // through those that are needed.
 func DownloadFromBucket(config configuration.Configuration, svc *s3.S3, dwn *s3manager.Downloader, dates []string, bprefix string) error {
 
 	var continuationToken *string
-
 	for {
 		resp, err := svc.ListObjectsV2(&s3.ListObjectsV2Input{
 			Bucket:            aws.String(config.S3.Bucket),
@@ -99,7 +98,6 @@ func DownloadFromBucket(config configuration.Configuration, svc *s3.S3, dwn *s3m
 				logrus.Info("Downloading files for: ", bprefix)
 
 				absoluteFileName := files.GetDownloadPath(config.DownloadDir, *item.Key)
-
 				if files.FileExists(absoluteFileName) {
 					logrus.Info("File already exists: ", absoluteFileName)
 					continue
@@ -107,7 +105,7 @@ func DownloadFromBucket(config configuration.Configuration, svc *s3.S3, dwn *s3m
 
 				fileHandler := files.FilePathSetup(absoluteFileName)
 
-				logrus.Info("Downloading ", absoluteFileName)
+				logrus.Info("Downloading to: ", absoluteFileName)
 				start := time.Now()
 				_, err := dwn.Download(
 					fileHandler,
@@ -123,12 +121,16 @@ func DownloadFromBucket(config configuration.Configuration, svc *s3.S3, dwn *s3m
 					return err
 				}
 
+				// Handle Parquet file
+				noExtFileName := files.RemoveExtention(absoluteFileName)
+				parquet_reader.ReadParquet(noExtFileName, absoluteFileName)
+				logrus.Info("File extracted.")
+
 				defer func() {
 					if err := fileHandler.Close(); err != nil {
 						logrus.Print("Error closing file handler for: ", absoluteFileName)
 					}
 				}()
-
 			}
 		}
 		if !aws.BoolValue(resp.IsTruncated) {
@@ -139,14 +141,21 @@ func DownloadFromBucket(config configuration.Configuration, svc *s3.S3, dwn *s3m
 	return nil
 }
 
-// Check AWS credentials are correct
+// CredCheck checks the credentials for a given AWS session.
+// The function takes a pointer to an AWS session as its only parameter.
+// It uses the Get method of the session's Credentials field to retrieve
+// credentials and check if they are valid. If the Get method returns an error,
+// the function logs a fatal error message. If the credentials are read successfully,
+// the function logs an info message indicating that the credentials were read successfully.
+// This function is useful for ensuring that the credentials used to authenticate
+// the AWS session are valid before performing any operations that require authentication.
 func CredCheck(sess *session.Session) {
 	_, err := sess.Config.Credentials.Get()
 
 	if err != nil {
 		logrus.Fatal(
-			"Error reading credentials file. Check README for help.\n")
+			"Error reading credentials. Check README for help.\n")
 	}
 
-	logrus.Info("Credentials file read succesfully")
+	logrus.Info("Credentials read succesfully")
 }
