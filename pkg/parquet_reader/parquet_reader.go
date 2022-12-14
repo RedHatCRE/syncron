@@ -48,7 +48,7 @@ func ReadParquet(outputFile string, fileToRead string) {
 		NoMemoryMap bool
 		//Columns     string
 	}
-	columns := "2"
+	columns := ""
 
 	var dataOut io.Writer
 	dataOut = os.Stdout
@@ -85,8 +85,6 @@ func ReadParquet(outputFile string, fileToRead string) {
 				os.Exit(1)
 			}
 			selectedColumns = append(selectedColumns, cval)
-			//uniqueValues := filter.RemoveDuplicates(selectedColumns)
-			fmt.Println("Original path to this file is: ", selectedColumns)
 		}
 	}
 
@@ -149,13 +147,13 @@ func ReadParquet(outputFile string, fileToRead string) {
 					}
 					fmt.Fprint(dataOut, s.FormatValue(val, colwidth), "|")
 					data = true
-				} //else {
-				//	if data {
-				//		fmt.Fprintf(dataOut, fmt.Sprintf("%%-%ds|", colwidth), "")
-				//	} else {
-				//		line += fmt.Sprintf(fmt.Sprintf("%%-%ds|", colwidth), "")
-				//	}
-				//}//
+				} else {
+					if data {
+						fmt.Fprintf(dataOut, fmt.Sprintf("%%-%ds|", colwidth), "")
+					} else {
+						line += fmt.Sprintf(fmt.Sprintf("%%-%ds|", colwidth), "")
+					}
+				}
 			}
 			if !data {
 				break
