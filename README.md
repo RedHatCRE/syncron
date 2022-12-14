@@ -24,7 +24,7 @@ Easily fetch files from **S3 buckets** with a cli based application written in G
 
 - Check that Syncron has been properly installed on your environment by running
     > `syncron -v`
-    > `syncron version 0.0.1`
+    > `syncron version 0.0.2`
 
     - Make sure your gopath is added to your path
       >  `export PATH=$PATH:$(go env GOPATH)/bin`
@@ -51,31 +51,36 @@ To use Syncron, two important steps must be taken.
             downloadDir: "<path where files will be downloaded>"
             ```
 
-- Proper credentials must be present on running machine at $HOME/.aws/credentials
+- Proper credentials must be present on running machine. Two options:
+  - Credentials file at $HOME/.aws/credentials
+    - The credentials file has the following format:
+    
+      ```
+      [default]
+      aws_access_key_id = "XXXXXXX"
+      aws_secret_access_key = "XXXXXXX"
+      ```
+      
+  - Environment variables must be set:
+    - export AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE
+    - export AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
 
-The credentials file has the following format:
-
-```
-[default]
-aws_access_key_id = "XXXXXXX"
-aws_secret_access_key = "XXXXXXX"
-```
 
 ## ⚙️ Commands & Options
 
 
 The user is given several flags to pick which time frame to pull data from.
 
+
+> ##### **Download files**
+
+| Option | Description                                              | Type   | Required? |
+|--------|----------------------------------------------------------|--------|-----------|
+| `download`   | Download files.| `string` | No        |
+
 ```bash
 syncron download [option] [--flag] [number]
 ```
-
-> ##### *Download files*
-
-| Option | Description                                              | Type   | Required? |
-|--------|----------------------------------------------------------|--------|---------|-----------|
-| `download`   | Download files.| `string` | No        |
-| `read-parquet`   | Read local parquet files.| `string` | No        |
 
 | --flag | Description                                              | Type   | Default | Required? |
 |--------|----------------------------------------------------------|--------|---------|-----------|
@@ -88,9 +93,14 @@ syncron download [option] [--flag] [number]
 |--------|----------------------------------------------------------|--------|---------|-----------|
 | `sosreports`   | Download sosreports files.| `string` | `sosreports` | Yes        |
 
-> ##### *Read parquet files*
+> ##### **Read parquet files**
+
+```bash
+syncron read-parquet [--flag] [option]
+```
+
 | Option | Description                                              | Type   | Required? |
-|--------|----------------------------------------------------------|--------|---------|-----------|
+|--------|----------------------------------------------------------|--------|-----------|
 | `read-parquet`   | Read local parquet files.| `string` | No        |
 
 | --flag | Description                                              | Type   | Default | Required? |
