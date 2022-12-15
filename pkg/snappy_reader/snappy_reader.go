@@ -18,6 +18,7 @@ package snappy_reader
 
 import (
 	"os"
+	"path/filepath"
 
 	"github.com/golang/snappy"
 	"github.com/sirupsen/logrus"
@@ -26,7 +27,7 @@ import (
 // CompressFile compresses the given file using the snappy algorithm
 func CompressFile(inputPath string, outputPath string) error {
 	// Read the input file
-	inputData, err := os.ReadFile(inputPath)
+	inputData, err := os.ReadFile(filepath.Clean(inputPath))
 	if err != nil {
 		return err
 	}
@@ -35,7 +36,7 @@ func CompressFile(inputPath string, outputPath string) error {
 	compressedData := snappy.Encode(nil, inputData)
 
 	// Write the compressed data to the output file
-	err = os.WriteFile(outputPath, compressedData, 0644)
+	err = os.WriteFile(outputPath, compressedData, 0600)
 	if err != nil {
 		return err
 	}
@@ -46,7 +47,7 @@ func CompressFile(inputPath string, outputPath string) error {
 // DecompressFile decompresses the given file using the snappy algorithm
 func DecompressFile(inputPath string, outputPath string) error {
 	// Read the input file
-	inputData, err := os.ReadFile(inputPath)
+	inputData, err := os.ReadFile(filepath.Clean(inputPath))
 	if err != nil {
 		logrus.Error("Error reading file")
 		return err
@@ -60,7 +61,7 @@ func DecompressFile(inputPath string, outputPath string) error {
 	}
 
 	// Write the decompressed data to the output file
-	err = os.WriteFile(outputPath, decompressedData, 0644)
+	err = os.WriteFile(outputPath, decompressedData, 0600)
 	if err != nil {
 		logrus.Error("Error writing file")
 		return err
