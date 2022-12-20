@@ -22,6 +22,7 @@ import (
 	s3setup "github.com/redhatcre/syncron/pkg/bucketaws"
 	"github.com/redhatcre/syncron/pkg/cli"
 	"github.com/redhatcre/syncron/utils/filter"
+	"github.com/redhatcre/syncron/utils/validators"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
@@ -68,16 +69,12 @@ func onRun(cmd *cobra.Command, args []string) error {
 
 	Month, _ := cmd.Flags().GetInt(cli.Months)
 	Year, _ := cmd.Flags().GetInt(cli.Years)
-	Day, err := cmd.Flags().GetInt(cli.Days)
+	Day, _ := cmd.Flags().GetInt(cli.Days)
 
-	if Day < 2 {
-		logrus.Error("No data available. Try again with 3 or more days.")
-		return err
-	}
 	fromDate := time.Now().AddDate(-Year, -Month, -Day)
+	validators.ValidateTime(fromDate)
 
 	// Reading configuration file
-
 	c := configuration.Configuration{}
 	c.GetConfiguration()
 
