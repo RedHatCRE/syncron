@@ -49,8 +49,9 @@ func ProcessDate(fromDate time.Time) []string {
 	return dates
 }
 
-// Initialize a session with AWS SDK
-// It will read from the file located at ~/.aws/credentials and syncron/syncron.yaml
+// SetupSession creates an AWS session using the provided configuration.
+// If there is an error creating the session, it logs a fatal error and returns nil.
+// Otherwise, it returns the newly created session.
 func SetupSession(config configuration.Configuration) *session.Session {
 
 	sess, err := session.NewSession(&aws.Config{
@@ -74,8 +75,18 @@ func AccessBucket(sess *session.Session) (*s3.S3, *s3manager.Downloader) {
 	return svc, dwn
 }
 
-// This function downloads files from bucket, filtering
-// through those that are needed.
+// This function downloads files from AWS S3 bucket and extracts the contents of any Parquet files it downloads.
+// It takes in several arguments:
+// - config: a configuration object that contains information such as the S3 bucket name and a local download directory
+// - svc: an S3 client object that allows the function to make API requests to the S3 bucket
+// - dwn: an S3 downloader object that is used to download the files from the bucket
+// - dates: a slice of strings representing dates, which are used to filter the files that are downloaded
+// - bprefix: a string representing a prefix to be appended to the bucket's file prefix
+// The function first initializes a continuationToken variable to nil. It then enters a loop that makes API requests
+// to the S3 bucket to list the objects within it. For each object in the bucket, the function checks if it contains any
+// of the dates in the dates slice, and if it does, it downloads and extracts the file. If the API response is truncated
+// (i.e., there are more objects in the bucket than could be returned in a single response), the function updates the continuationToken
+// variable and continues the loop. If the response is not truncated, the loop breaks and the function returns nil.
 func DownloadFromBucket(config configuration.Configuration, svc *s3.S3, dwn *s3manager.Downloader, dates []string, bprefix string) error {
 
 	var continuationToken *string
@@ -121,7 +132,7 @@ func DownloadFromBucket(config configuration.Configuration, svc *s3.S3, dwn *s3m
 					return err
 				}
 				// Handle Parquet file
-				noExtFileName := files.RemoveExtention(absoluteFileName)
+				noExtFileName := files.RemoveExtension(absoluteFileName)
 				parquet_reader.ReadParquet(noExtFileName, absoluteFileName)
 				logrus.Info("File extracted.")
 

@@ -44,6 +44,7 @@ func FilePathSetup(absoluteFilePath string) *os.File {
 	return fileHandler
 }
 
+// Check if file exists
 func FileExists(filePath string) bool {
 	if _, err := os.Stat(filePath); err == nil {
 		return true
@@ -57,14 +58,15 @@ func AppendPrefix(prefix string, bPrefix string) string {
 	return fmt.Sprint(prefix + bPrefix)
 }
 
-// Get the absolute download path of the file based on
-// the folder and the file
+// Get the absolute download path of the file based on the folder and the file
 func GetDownloadPath(downloadDir string, destinationFile string) string {
 	return filepath.Join(filepath.Clean(downloadDir), filepath.Clean(destinationFile))
 }
 
-
-func RemoveExtention(fileName string) string {
+// This function is used to remove the file extension from a file name.
+// It takes in a string representing the file name and returns a new string
+//with the file extension removed.
+func RemoveExtension(fileName string) string {
 	fileExt := path.Ext(fileName)
 	return strings.TrimSuffix(fileName, fileExt)
 }
