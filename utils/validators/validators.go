@@ -25,14 +25,20 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+// This function is used to validate the provided time. It checks if the provided time
+// is within the range of the first available date (2018-01-01) and the current date minus 3 days.
+// If the provided time is outside of this range, it will log a fatal error message. This function is
+// useful for ensuring that the provided time is within a certain range of dates, potentially to prevent users
+// from requesting data that may not exist or is not available.
 func ValidateTime(fromData time.Time) {
+
 	firstAvailableDate := time.Date(2018, 1, 1, 0, 0, 0, 0, time.UTC)
 	latestAvailableDate := time.Now().AddDate(0, 0, -3)
+
 	if fromData.Before(firstAvailableDate) {
 		logrus.Fatal("No available data before 2018. Please try again.")
 	}
 	if fromData.After(latestAvailableDate) {
 		logrus.Fatal("No available data after that date. Please try again")
 	}
-
 }
