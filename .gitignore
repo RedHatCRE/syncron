@@ -26,3 +26,4 @@ credentials
 *.swp
 
 *.parquet
+__debug_bin
