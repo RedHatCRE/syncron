@@ -47,7 +47,7 @@ func (c *Configuration) GetConfiguration() *Configuration {
 	if err != nil {
 		logrus.Fatal("Error structuring configuration", err)
 	}
-	
+
 	if c.DownloadDir == "" {
 		c.DownloadDir = "/tmp/syncron/"
 	}

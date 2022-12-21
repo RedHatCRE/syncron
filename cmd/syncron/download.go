@@ -77,7 +77,7 @@ func onRun(cmd *cobra.Command, args []string) error {
 	// Reading configuration file
 	c := configuration.Configuration{}
 	c.GetConfiguration()
-	
+
 	// Creating AWS session
 	sess := s3setup.SetupSession(c)
 	//Checking credentials
