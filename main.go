@@ -19,6 +19,9 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+// main is the entry point for the program.
+// It calls the Execute method on the cmd variable, which is of type *cobra.Command.
+// If the Execute method returns an error, the error is logged using the logrus.Fatal function.
 func main() {
 	if err := cmd.Execute(); err != nil {
 		logrus.Fatal(err)
