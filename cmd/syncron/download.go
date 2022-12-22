@@ -41,7 +41,7 @@ func init() {
 
 	download.Flags().Int(
 		cli.Days,
-		2,
+		3,
 		"Download data from the last X days",
 	)
 	download.Flags().Int(
