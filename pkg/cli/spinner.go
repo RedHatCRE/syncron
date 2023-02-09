@@ -14,31 +14,23 @@
 //    under the License.
 package cli
 
-// Keywords used as arguments on the CLI.
-const (
-	Insights   string = "insights"
-	SOSReports string = "sosreports"
-	All        string = "all"
-	Parquet    string = "parquet"
+import (
+	"os"
+	"time"
+
+	"github.com/briandowns/spinner"
 )
 
-// Keywords used as flags on the CLI.
-const (
-	Debug string = "debug"
+func IniSpinner(suffix string) *spinner.Spinner {
+	s := spinner.New(spinner.CharSets[14], 50*time.Millisecond, spinner.WithWriter(os.Stderr))
+	s.Start()
+	s.Suffix = suffix
+	return s
+}
 
-	Days         string = "days"
-	Months       string = "months"
-	Years        string = "years"
-	Filter       string = "filter"
-	Output       string = "output"
-	File         string = "file"
-	AccountN     string = "account-number"
-	DeploymentID string = "deploymentId"
-	QueryID      string = "query-id"
-	Components   string = "components"
-)
-
-// Keywords used as shortcuts on the CLI.
-const (
-	D string = "d"
-)
+func IniBar(suffix string) *spinner.Spinner {
+	s := spinner.New(spinner.CharSets[14], 50*time.Millisecond, spinner.WithWriter(os.Stderr))
+	s.Start()
+	s.Suffix = suffix
+	return s
+}

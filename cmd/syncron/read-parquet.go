@@ -44,24 +44,6 @@ func init() {
 		"",
 		"Specify file to read.",
 	)
-
-	// To be implemented in future PR.
-
-	//parquet.Flags().Bool(
-	//	"json",
-	//	false,
-	//	"Format output as JSON instead of text",
-	//)
-	//parquet.Flags().Bool(
-	//	"csv",
-	//	false,
-	//	"Format output as CSV instead of text",
-	//)
-	//parquet.Flags().String(
-	//	"columns",
-	//	"",
-	//	"Specify a subset of columns to print, comma delimited indexes.",
-	//)
 	root.AddCommand(parquet)
 }
 

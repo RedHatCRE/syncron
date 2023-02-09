@@ -27,3 +27,5 @@ credentials
 
 *.parquet
 __debug_bin
+*.json
+*.txt
