@@ -26,12 +26,16 @@ const (
 const (
 	Debug string = "debug"
 
-	Days   string = "days"
-	Months string = "months"
-	Years  string = "years"
-	Filter string = "filter"
-	Output string = "output"
-	File   string = "file"
+	Days         string = "days"
+	Months       string = "months"
+	Years        string = "years"
+	Filter       string = "filter"
+	Output       string = "output"
+	File         string = "file"
+	AccountN     string = "account-number"
+	DeploymentID string = "deploymentId"
+	QueryID      string = "query-id"
+	Components   string = "components"
 )
 
 // Keywords used as shortcuts on the CLI.
