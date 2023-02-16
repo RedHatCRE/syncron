@@ -18,6 +18,7 @@ package charts
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 
 	"github.com/go-echarts/go-echarts/v2/charts"
 	"github.com/go-echarts/go-echarts/v2/opts"
@@ -67,8 +68,12 @@ func CreateChart(title string, chartPath string, data []struct {
 				},
 			),
 		)
-	f, _ := os.Create(chartPath)
-	defer f.Close()
+	f, _ := os.Create(filepath.Clean(chartPath))
+	defer func() {
+		if err := f.Close(); err != nil {
+			logrus.Errorf("Error closing file: %s\n", err)
+		}
+	}()
 	err := pie.Render(f)
 	if err != nil {
 		logrus.Error("Error rendering chart \n", err)
