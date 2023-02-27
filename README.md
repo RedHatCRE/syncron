@@ -3,10 +3,13 @@
 
 # Syncron
 
-Easily fetch files from **S3 buckets** with a cli based application written in Golang.
+Usage Patterns all in one cli based application written in Golang.
 
 [![GoProject](https://img.shields.io/badge/Go-1.18+-00ADD8?style=for-the-badge&logo=go)](https://github.com/RedHatCRE/syncron) [![GoReport](https://img.shields.io/badge/Go_report-A+-success?style=for-the-badge&logo=none)](https://goreportcard.com/badge/github.com/redhatcre/syncron) ![License](https://img.shields.io/badge/license-apache_2.0-red?style=for-the-badge&logo=none)
 </div>
+<p align="center">
+  <img src="https://i.imgur.com/AtTFOVi.png">
+</p>
 
 ## 🔧 Installation
 
@@ -24,7 +27,7 @@ Easily fetch files from **S3 buckets** with a cli based application written in G
 
 - Check that Syncron has been properly installed on your environment by running
     > `syncron -v`
-    > `syncron version 0.0.2`
+    > `syncron version 1.0.0`
 
     - Make sure your gopath is added to your path
       >  `export PATH=$PATH:$(go env GOPATH)/bin`
@@ -51,7 +54,7 @@ To use Syncron, two important steps must be taken.
             downloadDir: "<path where files will be downloaded>"
             ```
 
-- Proper credentials must be present on running machine. Two options:
+- For downloading files from a AWS buckets, proper credentials must be present on running machine. Two options:
   - Credentials file at $HOME/.aws/credentials
     - The credentials file has the following format:
     
@@ -107,6 +110,13 @@ syncron read-parquet [--flag] [option]
 |--------|----------------------------------------------------------|--------|---------|-----------|
 | `file`   | What file to read. | `str` | `-` | Yes        |
 | `output`   | Path to place unpacked file. | `str` |  | Yes        |
+
+> ##### **Query data from database**
+
+```bash
+syncron queries
+```
+
 ## ⚠️ License
 
 `Syncron` is free and open-source software licensed under the [Apache 2.0 License](https://github.com/RedHatCRE/syncron/blob/main/LICENSE). 
