@@ -23,13 +23,15 @@ import (
 	"github.com/go-echarts/go-echarts/v2/charts"
 	"github.com/go-echarts/go-echarts/v2/opts"
 	"github.com/go-echarts/go-echarts/v2/types"
+	"github.com/redhatcre/syncron/utils/files"
 	"github.com/sirupsen/logrus"
 )
 
 func generatePieItems(data []struct {
-	OSP         string
-	Deployments int32
-	Percentage  float64
+	OSP             string
+	Deployments     int32
+	Percentage      float64
+	PercentageTotal float64
 }) []opts.PieData {
 	items := make([]opts.PieData, 0)
 	for _, d := range data {
@@ -42,9 +44,10 @@ func generatePieItems(data []struct {
 }
 
 func CreateChart(title string, chartPath string, data []struct {
-	OSP         string
-	Deployments int32
-	Percentage  float64
+	OSP             string
+	Deployments     int32
+	Percentage      float64
+	PercentageTotal float64
 }) {
 	pie := charts.NewPie()
 	pie.SetGlobalOptions(
@@ -68,7 +71,8 @@ func CreateChart(title string, chartPath string, data []struct {
 				},
 			),
 		)
-	f, _ := os.Create(filepath.Clean(chartPath))
+	files.FilePathSetup("/tmp/syncron/charts/" + chartPath)
+	f, _ := os.Create(filepath.Clean("/tmp/syncron/charts/" + chartPath))
 	defer func() {
 		if err := f.Close(); err != nil {
 			logrus.Errorf("Error closing file: %s\n", err)
@@ -77,8 +81,41 @@ func CreateChart(title string, chartPath string, data []struct {
 	err := pie.Render(f)
 	if err != nil {
 		logrus.Error("Error rendering chart \n", err)
-	} else {
-		logrus.Infof("Generated chart at %s", chartPath)
 	}
+}
 
+func CreateChartBars(chartPath string, numbers []int32, components []string) {
+
+	components = trimSlice(components)
+	var barData []opts.BarData
+	for _, d := range numbers {
+		barData = append(barData, opts.BarData{Value: d})
+	}
+	bar := charts.NewBar()
+
+	bar.SetGlobalOptions(
+		charts.WithInitializationOpts(opts.Initialization{Theme: types.ThemeChalk}),
+		charts.WithTitleOpts(opts.Title{Title: "Deployments per feature"}))
+	bar.SetXAxis(components).AddSeries("deployments", barData)
+	files.FilePathSetup("/tmp/syncron/charts/" + chartPath)
+	f, _ := os.Create(filepath.Clean("/tmp/syncron/charts/" + chartPath))
+	defer func() {
+		if err := f.Close(); err != nil {
+			logrus.Errorf("Error closing file: %s\n", err)
+		}
+	}()
+	err := bar.Render(f)
+	if err != nil {
+		logrus.Error("Error rendering chart \n", err)
+	}
+}
+
+func trimSlice(s []string) []string {
+	result := make([]string, len(s))
+	for i, str := range s {
+		if len(str) > 3 {
+			result[i] = str[0:3]
+		}
+	}
+	return result
 }

@@ -34,11 +34,9 @@ var User UserInfo
 
 // Display login screen and get user info.
 func GetUserInfo() {
-
 	greetings()
 	for {
 		fmt.Print("Username: ")
-
 		_, err := fmt.Scanln(&User.Name)
 		if err == nil {
 			break
@@ -47,7 +45,6 @@ func GetUserInfo() {
 	}
 	fmt.Print("Password: ")
 	bytepw, passerr := term.ReadPassword(int(syscall.Stdin))
-
 	fmt.Print("\n")
 	s := cli.IniSpinner(" Getting user credentials")
 	if passerr != nil {
@@ -58,8 +55,6 @@ func GetUserInfo() {
 }
 
 func greetings() {
-	fmt.Printf("\033[2J")
-	fmt.Printf("\033[H")
 
 	greetings := "Please, enter your ldap credentials below."
 	hi := `
