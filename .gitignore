@@ -29,3 +29,5 @@ credentials
 __debug_bin
 *.json
 *.txt
+*.html
+*.sarif

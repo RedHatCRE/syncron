@@ -59,13 +59,10 @@ func (parser *CobraParser) GetDebug() bool {
 			"Unable to read value for argument: '%s'. Reason: '%s'.",
 			Debug, err,
 		)
-
 		logrus.Warn(
 			"Continuing without debug messages...",
 		)
-
 		return false
 	}
-
 	return val
 }

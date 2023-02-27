@@ -34,7 +34,6 @@ type MyDataBase struct {
 // This function creates a client for accessing a MongoDB database.
 func (m *MyDataBase) CreateClient() *MyDataBase {
 
-	GetUserInfo()
 	c := configuration.Configuration{}
 	c.GetConfiguration()
 	uri := c.MongoConf.Uri
