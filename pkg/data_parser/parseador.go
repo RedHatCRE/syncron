@@ -3,8 +3,8 @@ package parseador
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"log"
+	"os"
 	"path/filepath"
 	"strings"
 
@@ -19,7 +19,7 @@ type Config struct {
 
 func Parseador(file string) {
 	// Read the contents of the configuration file into a byte slice
-	data, err := ioutil.ReadFile(filepath.Clean(file))
+	data, err := os.ReadFile(filepath.Clean(file))
 	if err != nil {
 		logrus.Fatal("Can't read file", err)
 	}
